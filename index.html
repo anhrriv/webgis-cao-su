@@ -10,21 +10,8 @@
 
 <title>WebGIS Quản lý vườn cao su</title>
 
-<!-- =====================================================
-     LEAFLET
-===================================================== -->
-
 <link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
-<!-- =====================================================
-     CHART.JS
-===================================================== -->
-
-<script
-src="https://cdn.jsdelivr.net/npm/chart.js">
-</script>
-
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
 
@@ -38,20 +25,12 @@ src="https://cdn.jsdelivr.net/npm/chart.js">
 
 html,
 body{
-
     margin:0;
     padding:0;
-
     width:100%;
     height:100%;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f3f5f4;
-
+    font-family:Arial,Helvetica,sans-serif;
+    overflow:hidden;
 }
 
 
@@ -80,22 +59,22 @@ body{
     padding:0 20px;
 
     box-shadow:
-    0 2px 6px
-    rgba(0,0,0,.25);
+    0 2px 5px
+    rgba(0,0,0,0.25);
 
     position:relative;
 
-    z-index:2000;
-
+    z-index:1000;
 }
+
 
 .logo{
 
     font-size:32px;
 
     margin-right:12px;
-
 }
+
 
 .header-title{
 
@@ -105,96 +84,29 @@ body{
 
 }
 
+
 .header-subtitle{
 
     font-size:12px;
 
-    margin-top:3px;
+    margin-top:4px;
 
     opacity:.9;
-
 }
 
 
 /* =====================================================
-   TAB
+   LAYOUT
 ===================================================== */
 
-#tabs{
-
-    height:45px;
-
-    background:white;
-
-    border-bottom:
-    1px solid #ccc;
+#container{
 
     display:flex;
-
-    align-items:center;
-
-    padding-left:15px;
-
-    position:relative;
-
-    z-index:1500;
-
-}
-
-.tab{
-
-    height:45px;
-
-    padding:
-    0 20px;
-
-    display:flex;
-
-    align-items:center;
-
-    cursor:pointer;
-
-    font-weight:bold;
-
-    color:#555;
-
-}
-
-.tab:hover{
-
-    background:#f1f8f2;
-
-}
-
-.tab.active{
-
-    color:#1b5e20;
-
-    border-bottom:
-    3px solid #2e7d32;
-
-}
-
-
-/* =====================================================
-   VIEW
-===================================================== */
-
-.view{
-
-    display:none;
 
     width:100%;
 
     height:
-    calc(100vh - 109px);
-
-}
-
-.view.active{
-
-    display:flex;
-
+    calc(100vh - 64px);
 }
 
 
@@ -210,21 +122,16 @@ body{
 
     height:100%;
 
-    background:#f4f6f4;
+    background:#f5f7f5;
 
     border-right:
     1px solid #ccc;
 
     overflow-y:auto;
 
-    padding:12px;
-
+    padding:14px;
 }
 
-
-/* =====================================================
-   SECTION
-===================================================== */
 
 .section{
 
@@ -242,8 +149,8 @@ body{
     box-shadow:
     0 1px 3px
     rgba(0,0,0,.08);
-
 }
+
 
 .section-title{
 
@@ -259,7 +166,6 @@ body{
     padding-bottom:7px;
 
     margin-bottom:10px;
-
 }
 
 
@@ -271,32 +177,57 @@ body{
 
     padding:8px;
 
-    border-radius:5px;
-
     background:#fff8e1;
 
     color:#795548;
 
+    border-radius:5px;
+
     font-size:12px;
 
     margin-bottom:10px;
-
 }
+
 
 #status.success{
 
     background:#e8f5e9;
 
     color:#2e7d32;
-
 }
+
 
 #status.error{
 
     background:#ffebee;
 
     color:#c62828;
+}
 
+
+/* =====================================================
+   LAYER
+===================================================== */
+
+.layer-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:7px;
+
+    cursor:pointer;
+}
+
+
+.layer-item input{
+
+    width:17px;
+
+    height:17px;
 }
 
 
@@ -312,94 +243,86 @@ body{
 
     font-weight:bold;
 
-    color:#555;
-
     margin-bottom:5px;
 
+    color:#555;
 }
+
 
 #searchInput{
 
     width:100%;
 
-    padding:9px;
+    padding:10px;
 
     border:
     1px solid #bbb;
 
     border-radius:5px;
 
-    font-size:13px;
+    font-size:14px;
 
     outline:none;
-
 }
+
 
 #searchInput:focus{
 
     border-color:#2e7d32;
 
+    box-shadow:
+    0 0 0 2px
+    rgba(46,125,50,.12);
 }
 
-
-/* =====================================================
-   BUTTON
-===================================================== */
 
 .button-row{
 
     display:flex;
 
-    gap:6px;
+    gap:7px;
 
-    margin-top:7px;
-
+    margin-top:8px;
 }
 
+
 .btn{
+
+    flex:1;
+
+    padding:9px;
 
     border:none;
 
     border-radius:5px;
 
-    padding:9px;
-
     cursor:pointer;
 
     font-weight:bold;
 
-    font-size:12px;
-
+    font-size:13px;
 }
+
 
 .btn-primary{
 
     background:#2e7d32;
 
     color:white;
-
 }
+
 
 .btn-primary:hover{
 
     background:#1b5e20;
-
 }
+
 
 .btn-secondary{
 
     background:#e0e0e0;
 
     color:#333;
-
-}
-
-.btn-warning{
-
-    background:#f9a825;
-
-    color:white;
-
 }
 
 
@@ -421,7 +344,119 @@ body{
     border-radius:5px;
 
     background:white;
+}
 
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stat-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:8px;
+}
+
+
+.stat-card{
+
+    background:#f5f9f5;
+
+    border:
+    1px solid #d9ead9;
+
+    border-radius:6px;
+
+    padding:10px;
+
+    text-align:center;
+}
+
+
+.stat-value{
+
+    font-size:19px;
+
+    font-weight:bold;
+
+    color:#1b5e20;
+}
+
+
+.stat-label{
+
+    font-size:11px;
+
+    color:#666;
+
+    margin-top:3px;
+}
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+#infoContent{
+
+    font-size:13px;
+
+    line-height:1.45;
+}
+
+
+.info-empty{
+
+    color:#777;
+
+    font-style:italic;
+
+    text-align:center;
+
+    padding:10px;
+}
+
+
+.info-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+
+.info-table tr{
+
+    border-bottom:
+    1px solid #eee;
+}
+
+
+.info-table td{
+
+    padding:6px 3px;
+
+    vertical-align:top;
+}
+
+
+.info-key{
+
+    width:43%;
+
+    font-weight:bold;
+
+    color:#444;
+}
+
+
+.info-value{
+
+    word-break:break-word;
 }
 
 
@@ -435,368 +470,75 @@ body{
 
     height:100%;
 
+    position:relative;
 }
 
 
-/* =====================================================
-   INFO
-===================================================== */
+.map-title{
 
-#infoContent{
+    position:absolute;
 
-    font-size:12px;
+    top:12px;
 
-}
+    left:50%;
 
-.info-table{
+    transform:
+    translateX(-50%);
 
-    width:100%;
+    z-index:500;
 
-    border-collapse:collapse;
+    background:
+    rgba(255,255,255,.93);
 
-}
+    padding:
+    8px 15px;
 
-.info-table td{
+    border-radius:5px;
 
-    padding:5px 3px;
-
-    border-bottom:
-    1px solid #eee;
-
-    vertical-align:top;
-
-}
-
-.info-key{
-
-    width:43%;
-
-    font-weight:bold;
-
-    color:#555;
-
-}
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-#dashboardView{
-
-    display:none;
-
-    width:100%;
-
-    height:
-    calc(100vh - 109px);
-
-    overflow-y:auto;
-
-    padding:18px;
-
-    background:#f3f5f4;
-
-}
-
-#dashboardView.active{
-
-    display:block;
-
-}
-
-
-/* =====================================================
-   DASH HEADER
-===================================================== */
-
-.dashboard-header{
-
-    display:flex;
-
-    justify-content:
-    space-between;
-
-    align-items:center;
-
-    margin-bottom:15px;
-
-}
-
-.dashboard-title{
-
-    font-size:22px;
+    box-shadow:
+    0 2px 7px
+    rgba(0,0,0,.25);
 
     font-weight:bold;
 
     color:#1b5e20;
 
-}
-
-.dashboard-filter-result{
-
-    font-size:13px;
-
-    color:#666;
-
+    pointer-events:none;
 }
 
 
 /* =====================================================
-   KPI
+   POPUP
 ===================================================== */
 
-.kpi-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(4,1fr);
-
-    gap:12px;
-
-    margin-bottom:15px;
-
-}
-
-.kpi{
-
-    background:white;
-
-    border-radius:8px;
-
-    padding:15px;
-
-    box-shadow:
-    0 2px 6px
-    rgba(0,0,0,.08);
-
-    border-left:
-    5px solid #2e7d32;
-
-}
-
-.kpi-title{
-
-    font-size:12px;
-
-    color:#777;
-
-    margin-bottom:8px;
-
-}
-
-.kpi-value{
-
-    font-size:25px;
-
-    font-weight:bold;
+.popup-title{
 
     color:#1b5e20;
-
-}
-
-.kpi-unit{
-
-    font-size:11px;
-
-    color:#777;
-
-    margin-top:3px;
-
-}
-
-
-/* =====================================================
-   CHART GRID
-===================================================== */
-
-.chart-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    1fr 1fr;
-
-    gap:15px;
-
-    margin-bottom:15px;
-
-}
-
-.chart-card{
-
-    background:white;
-
-    border-radius:8px;
-
-    padding:15px;
-
-    box-shadow:
-    0 2px 6px
-    rgba(0,0,0,.08);
-
-}
-
-.chart-title{
-
-    font-size:15px;
-
-    font-weight:bold;
-
-    color:#1b5e20;
-
-    margin-bottom:10px;
-
-}
-
-.chart-container{
-
-    height:310px;
-
-}
-
-
-/* =====================================================
-   TABLE CARD
-===================================================== */
-
-.table-card{
-
-    background:white;
-
-    border-radius:8px;
-
-    padding:15px;
-
-    box-shadow:
-    0 2px 6px
-    rgba(0,0,0,.08);
-
-}
-
-.table-header{
-
-    display:flex;
-
-    justify-content:
-    space-between;
-
-    align-items:center;
-
-    margin-bottom:10px;
-
-}
-
-.table-title{
 
     font-size:16px;
 
     font-weight:bold;
 
-    color:#1b5e20;
+    margin-bottom:8px;
 
-}
+    border-bottom:
+    2px solid #e8f5e9;
 
-#tableSearch{
-
-    width:260px;
-
-    padding:8px;
-
-    border:
-    1px solid #bbb;
-
-    border-radius:5px;
-
+    padding-bottom:5px;
 }
 
 
-/* =====================================================
-   DATA TABLE
-===================================================== */
-
-.table-wrapper{
-
-    width:100%;
-
-    overflow:auto;
-
-    max-height:500px;
-
-}
-
-#dataTable{
-
-    width:100%;
-
-    border-collapse:collapse;
+.popup-row{
 
     font-size:12px;
 
-}
-
-#dataTable th{
-
-    position:sticky;
-
-    top:0;
-
-    background:#2e7d32;
-
-    color:white;
-
-    padding:9px;
-
-    white-space:nowrap;
-
-    z-index:5;
-
-}
-
-#dataTable td{
-
-    padding:8px;
-
-    border-bottom:
-    1px solid #ddd;
-
-    white-space:nowrap;
-
-}
-
-#dataTable tbody tr{
-
-    cursor:pointer;
-
-}
-
-#dataTable tbody tr:hover{
-
-    background:#e8f5e9;
-
+    margin-bottom:4px;
 }
 
 
-/* =====================================================
-   BADGE
-===================================================== */
+.popup-key{
 
-.badge{
-
-    display:inline-block;
-
-    padding:
-    3px 7px;
-
-    border-radius:10px;
-
-    background:#e8f5e9;
-
-    color:#1b5e20;
-
-    font-size:11px;
-
+    font-weight:bold;
 }
 
 
@@ -816,17 +558,17 @@ body{
     0 1px 5px
     rgba(0,0,0,.3);
 
-    font-size:11px;
-
+    font-size:12px;
 }
+
 
 .legend-title{
 
     font-weight:bold;
 
-    margin-bottom:6px;
-
+    margin-bottom:7px;
 }
+
 
 .legend-item{
 
@@ -835,37 +577,24 @@ body{
     align-items:center;
 
     margin:4px 0;
-
 }
+
 
 .legend-color{
 
     width:22px;
 
-    height:13px;
+    height:14px;
 
     margin-right:6px;
 
-    border:
-    1px solid #777;
-
+    border:1px solid #777;
 }
 
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
-
-@media(max-width:1100px){
-
-    .kpi-grid{
-
-        grid-template-columns:
-        repeat(2,1fr);
-
-    }
-
-}
 
 @media(max-width:800px){
 
@@ -874,25 +603,16 @@ body{
         width:290px;
 
         min-width:290px;
-
     }
 
-    .chart-grid{
+    .header-title{
 
-        grid-template-columns:1fr;
-
+        font-size:16px;
     }
 
-    .kpi-grid{
+    .header-subtitle{
 
-        grid-template-columns:1fr 1fr;
-
-    }
-
-    .dashboard-header{
-
-        display:block;
-
+        display:none;
     }
 
 }
@@ -922,7 +642,7 @@ body{
         </div>
 
         <div class="header-subtitle">
-            Bản đồ - Cơ sở dữ liệu - Phân tích năng suất và sản lượng
+            Hệ thống thông tin địa lý quản lý và phân tích vườn cây
         </div>
 
     </div>
@@ -931,36 +651,10 @@ body{
 
 
 <!-- =====================================================
-     TABS
+     CONTAINER
 ===================================================== -->
 
-<div id="tabs">
-
-    <div
-        class="tab active"
-        onclick="showView('mapView',this)"
-    >
-        🗺️ BẢN ĐỒ
-    </div>
-
-    <div
-        class="tab"
-        onclick="showView('dashboardView',this)"
-    >
-        📊 DASHBOARD
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     MAP VIEW
-===================================================== -->
-
-<div
-    id="mapView"
-    class="view active"
->
+<div id="container">
 
 
 <!-- =====================================================
@@ -970,6 +664,8 @@ body{
 <div id="sidebar">
 
 
+<!-- STATUS -->
+
 <div id="status">
 
     Đang tải dữ liệu...
@@ -977,87 +673,81 @@ body{
 </div>
 
 
-<!-- LỚP -->
+<!-- =====================================================
+     LỚP BẢN ĐỒ
+===================================================== -->
 
 <div class="section">
 
 <div class="section-title">
+
     🗺️ LỚP BẢN ĐỒ
+
 </div>
 
 
-<label>
+<label class="layer-item">
 
 <input
-type="checkbox"
-id="toggleLo"
-checked
+    type="checkbox"
+    id="toggleLo"
+    checked
 >
 
-🌳 Lô cao su
+<span>
+    🌳 Lô cao su
+</span>
 
 </label>
 
-
-<br><br>
-
-
-<button
-class="btn btn-warning"
-style="width:100%"
-onclick="toggleYieldMap()"
->
-
-🎨 Bản đồ chuyên đề năng suất 2023
-
-</button>
-
-
 </div>
 
 
-<!-- TÌM KIẾM -->
+<!-- =====================================================
+     TÌM KIẾM
+===================================================== -->
 
 <div class="section">
 
 <div class="section-title">
+
     🔍 TÌM KIẾM
+
 </div>
 
 
 <label class="search-label">
 
-Mã lô / giống / đội / hiện trạng / năm trồng
+    Mã lô / giống / năm trồng / đội
 
 </label>
 
 
 <input
-id="searchInput"
-placeholder="Ví dụ: KC0609/03 PB"
+    type="text"
+    id="searchInput"
+    placeholder="Ví dụ: KC0609/03 PB"
 >
 
 
 <div class="button-row">
 
 <button
-class="btn btn-primary"
-style="flex:1"
-onclick="searchLo()"
+    class="btn btn-primary"
+    onclick="searchLo()"
 >
 
-🔍 Tìm
+    🔍 Tìm
 
 </button>
 
 
 <button
-class="btn btn-secondary"
-style="flex:1"
-onclick="resetAll()"
+    class="btn btn-secondary"
+    onclick="resetMap()"
 >
 
-↺ Xóa
+    ↺ Xóa
 
 </button>
 
@@ -1066,12 +756,16 @@ onclick="resetAll()"
 </div>
 
 
-<!-- BỘ LỌC -->
+<!-- =====================================================
+     BỘ LỌC
+===================================================== -->
 
 <div class="section">
 
 <div class="section-title">
+
     🔎 BỘ LỌC
+
 </div>
 
 
@@ -1080,12 +774,12 @@ onclick="resetAll()"
 </label>
 
 <select
-id="filterGiong"
-class="filter"
+    id="filterGiong"
+    class="filter"
 >
 
 <option value="">
--- Tất cả giống --
+    -- Tất cả giống --
 </option>
 
 </select>
@@ -1096,12 +790,12 @@ class="filter"
 </label>
 
 <select
-id="filterHienTrang"
-class="filter"
+    id="filterHienTrang"
+    class="filter"
 >
 
 <option value="">
--- Tất cả --
+    -- Tất cả --
 </option>
 
 </select>
@@ -1112,333 +806,136 @@ class="filter"
 </label>
 
 <select
-id="filterNamTrong"
-class="filter"
+    id="filterNamTrong"
+    class="filter"
 >
 
 <option value="">
--- Tất cả --
+    -- Tất cả --
 </option>
 
 </select>
 
 
 <button
-class="btn btn-primary"
-style="width:100%"
-onclick="applyFilters()"
+    class="btn btn-primary"
+    style="width:100%"
+    onclick="applyFilters()"
 >
 
-✓ Áp dụng bộ lọc
+    Áp dụng bộ lọc
 
 </button>
 
 
 <button
-class="btn btn-secondary"
-style="
-width:100%;
-margin-top:6px
-"
-onclick="clearFilters()"
+    class="btn btn-secondary"
+    style="width:100%;margin-top:6px"
+    onclick="clearFilters()"
 >
 
-Xóa bộ lọc
-
-</button>
-
-
-</div>
-
-
-<!-- THỐNG KÊ -->
-
-<div class="section">
-
-<div class="section-title">
-    📊 KẾT QUẢ LỌC
-</div>
-
-
-<table class="info-table">
-
-<tr>
-
-<td class="info-key">
-Số lô
-</td>
-
-<td id="sideLots">
-0
-</td>
-
-</tr>
-
-
-<tr>
-
-<td class="info-key">
-Diện tích
-</td>
-
-<td id="sideArea">
-0 ha
-</td>
-
-</tr>
-
-
-<tr>
-
-<td class="info-key">
-NS 2023
-</td>
-
-<td id="sideYield">
-0 kg/ha
-</td>
-
-</tr>
-
-
-<tr>
-
-<td class="info-key">
-SL 2023
-</td>
-
-<td id="sideProduction">
-0 tấn
-</td>
-
-</tr>
-
-</table>
-
-
-<br>
-
-
-<button
-class="btn btn-primary"
-style="width:100%"
-onclick="openDashboard()"
->
-
-📊 Xem Dashboard
+    Xóa bộ lọc
 
 </button>
 
 </div>
 
 
-<!-- THÔNG TIN -->
+<!-- =====================================================
+     THỐNG KÊ
+===================================================== -->
 
 <div class="section">
 
 <div class="section-title">
+
+    📊 THỐNG KÊ
+
+</div>
+
+
+<div class="stat-grid">
+
+
+<div class="stat-card">
+
+<div
+    class="stat-value"
+    id="totalLots"
+>
+    -
+</div>
+
+<div class="stat-label">
+
+    Số lô
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div
+    class="stat-value"
+    id="totalArea"
+>
+    -
+</div>
+
+<div class="stat-label">
+
+    Diện tích
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     THÔNG TIN
+===================================================== -->
+
+<div class="section">
+
+<div class="section-title">
+
     🌳 THÔNG TIN LÔ
+
 </div>
 
 
 <div id="infoContent">
 
-<div style="
-text-align:center;
-color:#777;
-padding:10px;
-">
+<div class="info-empty">
 
-Click vào một lô trên bản đồ
+    Click vào một lô trên bản đồ
 
 </div>
 
 </div>
 
 </div>
-
-
-</div>
-
-
-<!-- MAP -->
-
-<div id="map"></div>
 
 
 </div>
 
 
 <!-- =====================================================
-     DASHBOARD VIEW
+     MAP
 ===================================================== -->
 
-<div id="dashboardView">
+<div id="map">
 
+<div class="map-title">
 
-<div class="dashboard-header">
-
-<div>
-
-<div class="dashboard-title">
-
-📊 DASHBOARD KẾT QUẢ SAU LỌC
-
-</div>
-
-<div
-id="dashboardFilterResult"
-class="dashboard-filter-result"
->
-
-Đang hiển thị toàn bộ dữ liệu
-
-</div>
-
-</div>
-
-
-<button
-class="btn btn-primary"
-onclick="openMap()"
->
-
-🗺️ Quay lại bản đồ
-
-</button>
-
-</div>
-
-
-<!-- =====================================================
-     KPI
-===================================================== -->
-
-<div class="kpi-grid">
-
-
-<div class="kpi">
-
-<div class="kpi-title">
-TỔNG SỐ LÔ
-</div>
-
-<div
-class="kpi-value"
-id="kpiLots"
->
-0
-</div>
-
-<div class="kpi-unit">
-lô
-</div>
-
-</div>
-
-
-<div class="kpi">
-
-<div class="kpi-title">
-TỔNG DIỆN TÍCH
-</div>
-
-<div
-class="kpi-value"
-id="kpiArea"
->
-0
-</div>
-
-<div class="kpi-unit">
-ha
-</div>
-
-</div>
-
-
-<div class="kpi">
-
-<div class="kpi-title">
-NĂNG SUẤT BÌNH QUÂN 2023
-</div>
-
-<div
-class="kpi-value"
-id="kpiYield"
->
-0
-</div>
-
-<div class="kpi-unit">
-kg/ha
-</div>
-
-</div>
-
-
-<div class="kpi">
-
-<div class="kpi-title">
-TỔNG SẢN LƯỢNG 2023
-</div>
-
-<div
-class="kpi-value"
-id="kpiProduction"
->
-0
-</div>
-
-<div class="kpi-unit">
-tấn
-</div>
-
-</div>
-
-
-</div>
-
-
-<!-- =====================================================
-     CHARTS
-===================================================== -->
-
-<div class="chart-grid">
-
-
-<div class="chart-card">
-
-<div class="chart-title">
-
-📈 Năng suất trung bình theo năm
-
-</div>
-
-<div class="chart-container">
-
-<canvas
-id="yieldChart"
-></canvas>
-
-</div>
-
-</div>
-
-
-<div class="chart-card">
-
-<div class="chart-title">
-
-📊 Tổng sản lượng theo năm
-
-</div>
-
-<div class="chart-container">
-
-<canvas
-id="productionChart"
-></canvas>
+    WEBGIS CAO SU
 
 </div>
 
@@ -1449,94 +946,7 @@ id="productionChart"
 
 
 <!-- =====================================================
-     TABLE
-===================================================== -->
-
-<div class="table-card">
-
-
-<div class="table-header">
-
-<div class="table-title">
-
-📋 CHI TIẾT CÁC LÔ SAU LỌC
-
-</div>
-
-
-<input
-id="tableSearch"
-placeholder="🔍 Tìm trong bảng..."
-oninput="filterTable()"
->
-
-</div>
-
-
-<div class="table-wrapper">
-
-<table id="dataTable">
-
-<thead>
-
-<tr>
-
-<th>STT</th>
-
-<th>Mã lô mới</th>
-
-<th>Mã lô cũ</th>
-
-<th>Đội</th>
-
-<th>Giống</th>
-
-<th>Năm trồng</th>
-
-<th>Tuổi</th>
-
-<th>Diện tích (ha)</th>
-
-<th>NS 2017</th>
-
-<th>NS 2018</th>
-
-<th>NS 2019</th>
-
-<th>NS 2020</th>
-
-<th>NS 2021</th>
-
-<th>NS 2022</th>
-
-<th>NS 2023</th>
-
-<th>SL 2023 (tấn)</th>
-
-<th>Hiện trạng</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="tableBody">
-
-</tbody>
-
-</table>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-<!-- =====================================================
-     JAVASCRIPT
+     LEAFLET
 ===================================================== -->
 
 <script
@@ -1552,104 +962,103 @@ src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 // ========================================================
 
 const GEOJSON_URL =
-"lo.geojson";
-
-
-// ========================================================
-// BIẾN TOÀN CỤC
-// ========================================================
-
-let map;
-
-let loLayer;
-
-let filteredLayer;
-
-let allFeatures = [];
-
-let currentFeatures = [];
-
-let selectedLayer = null;
-
-let yieldMode = false;
-
-let yieldLegend = null;
-
-let yieldChart = null;
-
-let productionChart = null;
+    "lo.geojson";
 
 
 // ========================================================
 // KHỞI TẠO MAP
 // ========================================================
 
-map =
-L.map("map")
-.setView(
-    [13.75,108.0],
-    10
-);
+const map =
+    L.map("map")
+    .setView(
+        [13.75,108.0],
+        10
+    );
 
 
 // ========================================================
-// BẢN ĐỒ NỀN
+// OPEN STREET MAP
 // ========================================================
 
 const osm =
-L.tileLayer(
+    L.tileLayer(
 
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
-{
+        {
 
-maxZoom:20,
+            maxZoom:20,
 
-attribution:
-"&copy; OpenStreetMap contributors"
+            attribution:
+            "&copy; OpenStreetMap contributors"
 
-}
+        }
 
-);
+    );
 
+
+// ========================================================
+// ẢNH VỆ TINH ESRI
+// ========================================================
 
 const satellite =
-L.tileLayer(
+    L.tileLayer(
 
-"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 
-{
+        {
 
-maxZoom:20,
+            maxZoom:20,
 
-attribution:
-"Tiles &copy; Esri"
+            attribution:
+            "Tiles &copy; Esri"
 
-}
+        }
 
-);
+    );
 
 
+// Mặc định
 osm.addTo(map);
 
 
 // ========================================================
-// LAYER CONTROL
+// BIẾN
 // ========================================================
 
-L.control.layers(
+let loLayer = null;
 
-{
+let allFeatures = [];
 
-"🗺️ Bản đồ đường":
-osm,
+let filteredLayer = null;
 
-"🛰️ Ảnh vệ tinh":
-satellite
+let selectedLayer = null;
 
-}
 
-).addTo(map);
+// ========================================================
+// DOM
+// ========================================================
+
+const statusBox =
+    document.getElementById(
+        "status"
+    );
+
+const infoContent =
+    document.getElementById(
+        "infoContent"
+    );
+
+const totalLots =
+    document.getElementById(
+        "totalLots"
+    );
+
+const totalArea =
+    document.getElementById(
+        "totalArea"
+    );
 
 
 // ========================================================
@@ -1657,25 +1066,44 @@ satellite
 // ========================================================
 
 function setStatus(
-text,
-type=""
+    text,
+    type=""
 ){
 
-const box =
-document.getElementById(
-"status"
-);
+    statusBox.textContent =
+        text;
 
-box.textContent =
-text;
+    statusBox.className =
+        "";
 
-box.className = "";
+    if(type){
 
-if(type){
+        statusBox.classList.add(
+            type
+        );
 
-box.classList.add(type);
+    }
 
 }
+
+
+// ========================================================
+// ESCAPE HTML
+// ========================================================
+
+function escapeHtml(value){
+
+    return String(value)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
 
 }
 
@@ -1685,255 +1113,154 @@ box.classList.add(type);
 // ========================================================
 
 function formatNumber(
-value,
-decimals=2
+    value,
+    decimals=2
 ){
 
-const n =
-Number(value);
+    const n =
+        Number(value);
 
-if(
-!Number.isFinite(n)
+    if(
+        !Number.isFinite(n)
+    ){
+
+        return value;
+
+    }
+
+    return n.toLocaleString(
+        "vi-VN",
+        {
+
+            minimumFractionDigits:
+                decimals,
+
+            maximumFractionDigits:
+                decimals
+
+        }
+    );
+
+}
+
+
+// ========================================================
+// TÌM TRƯỜNG DIỆN TÍCH
+// ========================================================
+
+function findAreaField(
+    properties
 ){
 
-return "0";
+    const candidates = [
 
-}
+        "DT_2024",
+        "DT_bando",
+        "DT_2023"
 
-return n.toLocaleString(
-"vi-VN",
-{
-
-minimumFractionDigits:
-decimals,
-
-maximumFractionDigits:
-decimals
-
-}
-
-);
+    ];
 
 
-// ========================================================
-// ESCAPE
-// ========================================================
+    for(
+        const field
+        of candidates
+    ){
 
-function escapeHtml(value){
+        if(
+            properties[field] !==
+            undefined
+        ){
 
-return String(value ?? "")
+            return field;
 
-.replace(/&/g,"&amp;")
+        }
 
-.replace(/</g,"&lt;")
+    }
 
-.replace(/>/g,"&gt;")
 
-.replace(/"/g,"&quot;")
-
-.replace(/'/g,"&#039;");
+    return null;
 
 }
 
 
 // ========================================================
-// DIỆN TÍCH
+// TÍNH THỐNG KÊ
 // ========================================================
 
-function getArea(p){
-
-let area =
-Number(p.DT_2024);
-
-if(
-!Number.isFinite(area) ||
-area <= 0
+function updateStatistics(
+    features
 ){
 
-area =
-Number(p.DT_bando);
-
-}
-
-if(
-!Number.isFinite(area)
-){
-
-area = 0;
-
-}
-
-return area;
-
-}
+    totalLots.textContent =
+        features.length
+        .toLocaleString(
+            "vi-VN"
+        );
 
 
-// ========================================================
-// TUỔI CÂY
-// ========================================================
-
-function getAge(p){
-
-const year =
-parseInt(p.Nam_trong);
-
-if(
-!Number.isFinite(year) ||
-year < 1900
-){
-
-return "";
-
-}
-
-return new Date()
-.getFullYear()
-- year;
-
-}
+    let area = 0;
 
 
-// ========================================================
-// NĂNG SUẤT
-// ========================================================
+    features.forEach(
+        feature => {
 
-function getYield(
-p,
-year
-){
+            const p =
+                feature.properties ||
+                {};
 
-const value =
-Number(
-p["NS_" + year]
-);
 
-if(
-!Number.isFinite(value)
-){
+            const field =
+                findAreaField(p);
 
-return 0;
 
-}
+            if(field){
 
-return value;
+                const value =
+                    Number(
+                        p[field]
+                    );
+
+
+                if(
+                    Number.isFinite(value)
+                ){
+
+                    area += value;
+
+                }
+
+            }
+
+        }
+    );
+
+
+    totalArea.textContent =
+        formatNumber(
+            area,
+            2
+        ) + " ha";
 
 }
 
 
 // ========================================================
-// SẢN LƯỢNG
-//
-// NS kg/ha × DT ha / 1000 = tấn
+// STYLE LÔ
 // ========================================================
 
-function getProduction(
-p,
-year
-){
+function styleLo(){
 
-const yieldValue =
-getYield(
-p,
-year
-);
+    return {
 
-const area =
-getArea(p);
+        color:"#176b2c",
 
-return (
-yieldValue *
-area /
-1000
-);
+        weight:1,
 
-}
+        fillColor:"#66bb6a",
 
+        fillOpacity:.55
 
-// ========================================================
-// STYLE
-// ========================================================
-
-function normalStyle(){
-
-return {
-
-color:"#176b2c",
-
-weight:1,
-
-fillColor:"#66bb6a",
-
-fillOpacity:.50
-
-};
-
-}
-
-
-// ========================================================
-// STYLE NĂNG SUẤT
-// ========================================================
-
-function yieldStyle(
-p
-){
-
-const value =
-getYield(
-p,
-2023
-);
-
-
-let fillColor =
-"#bdbdbd";
-
-
-if(value < 500){
-
-fillColor =
-"#d73027";
-
-}
-else if(value < 700){
-
-fillColor =
-"#fc8d59";
-
-}
-else if(value < 900){
-
-fillColor =
-"#fee08b";
-
-}
-else if(value < 1100){
-
-fillColor =
-"#91cf60";
-
-}
-else{
-
-fillColor =
-"#1a9850";
-
-}
-
-
-return {
-
-color:"#555",
-
-weight:1,
-
-fillColor:
-
-fillColor,
-
-fillOpacity:.70
-
-};
+    };
 
 }
 
@@ -1944,144 +1271,77 @@ fillOpacity:.70
 
 function highlightFeature(e){
 
-e.target.setStyle({
+    e.target.setStyle({
 
-weight:3,
+        weight:3,
 
-color:"#ff0000",
+        color:"#ff0000",
 
-fillOpacity:.85
+        fillColor:"#81c784",
 
-});
+        fillOpacity:.8
+
+    });
 
 }
 
 
 // ========================================================
-// RESET
+// RESET HIGHLIGHT
 // ========================================================
 
 function resetHighlight(e){
 
-if(
-e.target !== selectedLayer
+    if(
+        loLayer
+    ){
+
+        loLayer.resetStyle(
+            e.target
+        );
+
+    }
+
+}
+
+
+// ========================================================
+// HIỂN THỊ THÔNG TIN LÔ
+// ========================================================
+
+function showInfo(
+    p
 ){
 
-if(yieldMode){
+    if(!p){
 
-e.target.setStyle(
-yieldStyle(
-e.target.feature.properties
-)
-);
+        return;
 
-}
-else{
-
-e.target.setStyle(
-normalStyle()
-);
-
-}
-
-}
-
-}
+    }
 
 
-// ========================================================
-// POPUP
-// ========================================================
-
-function createPopup(p){
-
-return `
-
-<div style="
-font-size:13px;
-min-width:230px;
-">
-
-<div style="
-font-size:16px;
-font-weight:bold;
-color:#1b5e20;
-margin-bottom:8px;
-">
-
-🌳 ${
-escapeHtml(
-p.Tenlo_moi ||
-p.Tenlo_cu ||
-"Lô cao su"
-)
-}
-
-</div>
+    const namTrong =
+        parseInt(
+            p.Nam_trong
+        );
 
 
-<div>
-<b>Giống:</b>
-${escapeHtml(p.Giong)}
-</div>
+    let tuoi = "";
 
 
-<div>
-<b>Năm trồng:</b>
-${escapeHtml(p.Nam_trong)}
-</div>
+    if(
+        namTrong >= 1900
+    ){
+
+        tuoi =
+            new Date()
+            .getFullYear()
+            - namTrong;
+
+    }
 
 
-<div>
-<b>Tuổi:</b>
-${getAge(p)} năm
-</div>
-
-
-<div>
-<b>Diện tích:</b>
-${formatNumber(getArea(p),2)} ha
-</div>
-
-
-<div>
-<b>Hiện trạng:</b>
-${escapeHtml(p.Hien_trang)}
-</div>
-
-
-<hr>
-
-
-<div>
-<b>Năng suất 2023:</b>
-${formatNumber(
-getYield(p,2023),2
-)} kg/ha
-</div>
-
-
-<div>
-<b>Sản lượng 2023:</b>
-${formatNumber(
-getProduction(p,2023),2
-)} tấn
-</div>
-
-</div>
-
-`;
-
-}
-
-
-// ========================================================
-// INFO SIDEBAR
-// ========================================================
-
-function showInfo(p){
-
-const html = `
+    let html = `
 
 <table class="info-table">
 
@@ -2091,8 +1351,8 @@ const html = `
 Mã lô mới
 </td>
 
-<td>
-${escapeHtml(p.Tenlo_moi)}
+<td class="info-value">
+${escapeHtml(p.Tenlo_moi || "")}
 </td>
 </tr>
 
@@ -2103,7 +1363,7 @@ Mã lô cũ
 </td>
 
 <td>
-${escapeHtml(p.Tenlo_cu)}
+${escapeHtml(p.Tenlo_cu || "")}
 </td>
 </tr>
 
@@ -2114,7 +1374,7 @@ Vùng
 </td>
 
 <td>
-${escapeHtml(p.Vung)}
+${escapeHtml(p.Vung || "")}
 </td>
 </tr>
 
@@ -2125,7 +1385,18 @@ Khu vực
 </td>
 
 <td>
-${escapeHtml(p.Khu_vuc)}
+${escapeHtml(p.Khu_vuc || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Công ty
+</td>
+
+<td>
+${escapeHtml(p.Congty || "")}
 </td>
 </tr>
 
@@ -2136,18 +1407,7 @@ ${escapeHtml(p.Khu_vuc)}
 </td>
 
 <td>
-${escapeHtml(p.NT_doi)}
-</td>
-</tr>
-
-
-<tr>
-<td class="info-key">
-Giống
-</td>
-
-<td>
-${escapeHtml(p.Giong)}
+${escapeHtml(p.NT_doi || "")}
 </td>
 </tr>
 
@@ -2158,18 +1418,29 @@ Năm trồng
 </td>
 
 <td>
-${escapeHtml(p.Nam_trong)}
+${escapeHtml(p.Nam_trong || "")}
 </td>
 </tr>
 
 
 <tr>
 <td class="info-key">
-Tuổi
+Tuổi cây
 </td>
 
 <td>
-${getAge(p)} năm
+${tuoi ? tuoi + " năm" : ""}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Giống
+</td>
+
+<td>
+${escapeHtml(p.Giong || "")}
 </td>
 </tr>
 
@@ -2180,7 +1451,7 @@ Hạng đất
 </td>
 
 <td>
-${escapeHtml(p.Hang_dat)}
+${escapeHtml(p.Hang_dat || "")}
 </td>
 </tr>
 
@@ -2202,7 +1473,7 @@ Khoảng cách
 </td>
 
 <td>
-${escapeHtml(p.KC)}
+${escapeHtml(p.KC || "")}
 </td>
 </tr>
 
@@ -2213,18 +1484,42 @@ Mật độ
 </td>
 
 <td>
-${escapeHtml(p.Mat_do)}
+${escapeHtml(p.Mat_do || "")}
 </td>
 </tr>
 
 
 <tr>
 <td class="info-key">
-Diện tích
+Mật độ cạo
 </td>
 
 <td>
-${formatNumber(getArea(p),2)} ha
+${formatNumber(p.Matdo_CC,0)}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Diện tích bản đồ
+</td>
+
+<td>
+${formatNumber(p.DT_bando,2)}
+ ha
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Diện tích 2024
+</td>
+
+<td>
+${formatNumber(p.DT_2024,2)}
+ ha
 </td>
 </tr>
 
@@ -2235,7 +1530,29 @@ Hiện trạng
 </td>
 
 <td>
-${escapeHtml(p.Hien_trang)}
+${escapeHtml(p.Hien_trang || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Phân loại vườn cây
+</td>
+
+<td>
+${escapeHtml(p.Phanloai_VC || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Loại vườn
+</td>
+
+<td>
+${escapeHtml(p.HT_Loaivuon || "")}
 </td>
 </tr>
 
@@ -2246,330 +1563,485 @@ ${escapeHtml(p.Hien_trang)}
 <hr>
 
 
-<b>📈 NĂNG SUẤT</b>
+<b>📈 NĂNG SUẤT (kg/ha)</b>
 
 
 <table class="info-table">
 
+
 <tr>
 <td>2017</td>
-<td>${formatNumber(getYield(p,2017),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2017,2)}</td>
 </tr>
+
 
 <tr>
 <td>2018</td>
-<td>${formatNumber(getYield(p,2018),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2018,2)}</td>
 </tr>
+
 
 <tr>
 <td>2019</td>
-<td>${formatNumber(getYield(p,2019),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2019,2)}</td>
 </tr>
+
 
 <tr>
 <td>2020</td>
-<td>${formatNumber(getYield(p,2020),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2020,2)}</td>
 </tr>
+
 
 <tr>
 <td>2021</td>
-<td>${formatNumber(getYield(p,2021),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2021,2)}</td>
 </tr>
+
 
 <tr>
 <td>2022</td>
-<td>${formatNumber(getYield(p,2022),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2022,2)}</td>
 </tr>
+
 
 <tr>
 <td>2023</td>
-<td>${formatNumber(getYield(p,2023),2)} kg/ha</td>
+<td>${formatNumber(p.NS_2023,2)}</td>
 </tr>
+
 
 </table>
 
+`;
 
-<hr>
+
+    infoContent.innerHTML =
+        html;
+
+}
 
 
-<b>📦 SẢN LƯỢNG 2023</b>
+// ========================================================
+// POPUP
+// ========================================================
 
-<br><br>
+function createPopup(
+    p
+){
+
+    return `
+
+<div class="popup-title">
+
+🌳 ${escapeHtml(
+    p.Tenlo_moi ||
+    p.Tenlo_cu ||
+    "Lô cao su"
+)}
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Giống:</b>
+
+${escapeHtml(
+    p.Giong || ""
+)}
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Năm trồng:</b>
+
+${escapeHtml(
+    p.Nam_trong || ""
+)}
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Diện tích:</b>
 
 ${formatNumber(
-getProduction(p,2023),
-2
-)} tấn
+    p.DT_2024 ||
+    p.DT_bando,
+    2
+)} ha
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Hiện trạng:</b>
+
+${escapeHtml(
+    p.Hien_trang || ""
+)}
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Năng suất 2023:</b>
+
+${formatNumber(
+    p.NS_2023,
+    2
+)} kg/ha
+
+</div>
 
 `;
 
-document.getElementById(
-"infoContent"
-).innerHTML = html;
-
 }
 
 
 // ========================================================
-// ON EACH FEATURE
+// XỬ LÝ FEATURE
 // ========================================================
 
 function onEachFeature(
-feature,
-layer
+    feature,
+    layer
 ){
 
-const p =
-feature.properties || {};
+    const p =
+        feature.properties ||
+        {};
 
 
-layer.bindPopup(
-createPopup(p)
-);
+    layer.bindPopup(
+
+        createPopup(p),
+
+        {
+            maxWidth:350
+        }
+
+    );
 
 
-layer.on({
+    layer.on({
 
-mouseover:
-highlightFeature,
+        mouseover:
+            highlightFeature,
 
-mouseout:
-resetHighlight,
+        mouseout:
+            resetHighlight,
 
-click:function(){
+        click:
+            function(){
 
-if(
-selectedLayer &&
-selectedLayer !== layer
-){
+                if(
+                    selectedLayer
+                ){
 
-resetHighlight({
-target:selectedLayer
-});
+                    loLayer.resetStyle(
+                        selectedLayer
+                    );
 
-}
-
-
-selectedLayer =
-layer;
+                }
 
 
-layer.setStyle({
-
-weight:4,
-
-color:"#d32f2f",
-
-fillColor:"#ffb74d",
-
-fillOpacity:.85
-
-});
+                selectedLayer =
+                    layer;
 
 
-showInfo(p);
+                layer.setStyle({
 
-}
+                    weight:4,
 
-});
+                    color:"#d32f2f",
+
+                    fillColor:"#ffb74d",
+
+                    fillOpacity:.85
+
+                });
+
+
+                showInfo(p);
+
+                layer.openPopup();
+
+            }
+
+    });
 
 }
 
 
 // ========================================================
-// LOAD GEOJSON
+// TẢI GEOJSON
 // ========================================================
 
 async function loadGeoJSON(){
 
-try{
+    try{
 
-setStatus(
-"Đang tải dữ liệu..."
-);
-
-
-const response =
-await fetch(
-GEOJSON_URL
-);
+        setStatus(
+            "Đang tải dữ liệu lô..."
+        );
 
 
-if(
-!response.ok
-){
-
-throw new Error(
-"Không tìm thấy lo.geojson"
-);
-
-}
+        const response =
+            await fetch(
+                GEOJSON_URL
+            );
 
 
-const data =
-await response.json();
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                "Không tìm thấy lo.geojson"
+            );
+
+        }
 
 
-if(
-!data.features
-){
-
-throw new Error(
-"GeoJSON không hợp lệ"
-);
-
-}
+        const data =
+            await response.json();
 
 
-allFeatures =
-data.features;
+        if(
+            !data.features
+        ){
 
-currentFeatures =
-[
-...allFeatures
-];
+            throw new Error(
+                "GeoJSON không hợp lệ"
+            );
 
-
-loLayer =
-L.geoJSON(
-
-data,
-
-{
-
-style:normalStyle,
-
-onEachFeature:
-onEachFeature
-
-}
-
-).addTo(map);
+        }
 
 
-document
-.getElementById(
-"toggleLo"
-)
-.checked = true;
+        allFeatures =
+            data.features;
 
 
-if(
-loLayer.getBounds()
-.isValid()
-){
+        loLayer =
+            L.geoJSON(
 
-map.fitBounds(
-loLayer.getBounds(),
-{
-padding:[20,20]
-}
-);
+                data,
 
-}
+                {
 
+                    style:
+                        styleLo,
 
-populateFilters();
+                    onEachFeature:
+                        onEachFeature
 
+                }
 
-updateAll();
+            ).addTo(map);
 
 
-setStatus(
-
-"Đã tải " +
-allFeatures.length +
-" lô.",
-
-"success"
-
-);
+        const bounds =
+            loLayer.getBounds();
 
 
-}
+        if(
+            bounds.isValid()
+        ){
 
-catch(error){
+            map.fitBounds(
+                bounds,
+                {
+                    padding:[20,20]
+                }
+            );
 
-console.error(error);
+        }
 
-setStatus(
-"Lỗi tải GeoJSON",
-"error"
-);
 
-alert(
-"Không tải được lo.geojson.\n\n" +
-error.message
-);
+        updateStatistics(
+            allFeatures
+        );
 
-}
+
+        populateFilters();
+
+
+        L.control.layers(
+
+            {
+
+                "🗺️ Bản đồ đường":
+                    osm,
+
+                "🛰️ Ảnh vệ tinh":
+                    satellite
+
+            },
+
+            {
+
+                "🌳 Lô cao su":
+                    loLayer
+
+            },
+
+            {
+
+                collapsed:false
+
+            }
+
+        ).addTo(map);
+
+
+        addLegend();
+
+
+        setStatus(
+
+            "Đã tải " +
+            allFeatures.length +
+            " lô cao su.",
+
+            "success"
+
+        );
+
+    }
+
+
+    catch(error){
+
+        console.error(error);
+
+
+        setStatus(
+            "Lỗi tải GeoJSON",
+            "error"
+        );
+
+
+        infoContent.innerHTML = `
+
+<div style="color:#c62828">
+
+<b>
+Không tải được lo.geojson
+</b>
+
+<br><br>
+
+Kiểm tra file:
+
+<br>
+
+<b>
+lo.geojson
+</b>
+
+<br><br>
+
+và bảo đảm file nằm cùng thư mục
+với index.html.
+
+<br><br>
+
+${escapeHtml(
+    error.message
+)}
+
+</div>
+
+`;
+
+    }
 
 }
 
 
 // ========================================================
-// POPULATE FILTER
+// TẠO BỘ LỌC
 // ========================================================
 
 function populateFilters(){
 
-const sets = {
+    const giongSet =
+        new Set();
 
-Giong:
-new Set(),
+    const hienTrangSet =
+        new Set();
 
-Hien_trang:
-new Set(),
-
-Nam_trong:
-new Set()
-
-};
+    const namSet =
+        new Set();
 
 
-allFeatures.forEach(
-feature => {
+    allFeatures.forEach(
+        feature => {
 
-const p =
-feature.properties || {};
-
-
-if(p.Giong)
-sets.Giong.add(
-p.Giong
-);
+            const p =
+                feature.properties ||
+                {};
 
 
-if(p.Hien_trang)
-sets.Hien_trang.add(
-p.Hien_trang
-);
+            if(
+                p.Giong
+            ){
+
+                giongSet.add(
+                    p.Giong
+                );
+
+            }
 
 
-if(p.Nam_trong)
-sets.Nam_trong.add(
-p.Nam_trong
-);
+            if(
+                p.Hien_trang
+            ){
 
-});
+                hienTrangSet.add(
+                    p.Hien_trang
+                );
 
-
-fillSelect(
-"filterGiong",
-sets.Giong
-);
+            }
 
 
-fillSelect(
-"filterHienTrang",
-sets.Hien_trang
-);
+            if(
+                p.Nam_trong
+            ){
+
+                namSet.add(
+                    p.Nam_trong
+                );
+
+            }
+
+        }
+    );
 
 
-fillSelect(
-"filterNamTrong",
-sets.Nam_trong
-);
+    fillSelect(
+        "filterGiong",
+        [...giongSet].sort()
+    );
+
+
+    fillSelect(
+        "filterHienTrang",
+        [...hienTrangSet].sort()
+    );
+
+
+    fillSelect(
+        "filterNamTrong",
+        [...namSet].sort()
+    );
 
 }
 
@@ -2579,1832 +2051,549 @@ sets.Nam_trong
 // ========================================================
 
 function fillSelect(
-id,
-set
+    id,
+    values
 ){
 
-const select =
-document.getElementById(id);
+    const select =
+        document.getElementById(
+            id
+        );
 
 
-[...set]
+    values.forEach(
+        value => {
 
-.sort(
-(a,b) =>
-String(a)
-.localeCompare(
-String(b),
-"vi"
-)
-)
+            const option =
+                document.createElement(
+                    "option"
+                );
 
-.forEach(
-value => {
 
-const option =
-document.createElement(
-"option"
-);
+            option.value =
+                value;
 
-option.value =
-value;
 
-option.textContent =
-value;
+            option.textContent =
+                value;
 
-select.appendChild(
-option
-);
 
-});
+            select.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
 
 // ========================================================
-// APPLY FILTER
+// ÁP DỤNG BỘ LỌC
 // ========================================================
 
 function applyFilters(){
 
-const giong =
-document.getElementById(
-"filterGiong"
-).value;
+    const giong =
+        document.getElementById(
+            "filterGiong"
+        ).value;
 
 
-const hienTrang =
-document.getElementById(
-"filterHienTrang"
-).value;
+    const hienTrang =
+        document.getElementById(
+            "filterHienTrang"
+        ).value;
 
 
-const namTrong =
-document.getElementById(
-"filterNamTrong"
-).value;
+    const namTrong =
+        document.getElementById(
+            "filterNamTrong"
+        ).value;
 
 
-currentFeatures =
-allFeatures.filter(
-feature => {
+    const result =
+        allFeatures.filter(
+            feature => {
 
-const p =
-feature.properties || {};
-
-
-return (
-
-(!giong ||
-p.Giong === giong)
-
-&&
-
-(!hienTrang ||
-p.Hien_trang === hienTrang)
-
-&&
-
-(!namTrong ||
-String(p.Nam_trong)
-===
-String(namTrong))
-
-);
-
-});
+                const p =
+                    feature.properties ||
+                    {};
 
 
-renderFilteredLayer();
+                const okGiong =
+                    !giong ||
+                    p.Giong ===
+                    giong;
 
 
-updateAll();
+                const okHienTrang =
+                    !hienTrang ||
+                    p.Hien_trang ===
+                    hienTrang;
 
 
-setStatus(
-
-"Đã lọc: " +
-currentFeatures.length +
-" lô.",
-
-"success"
-
-);
-
-
-// chuyển Dashboard
-openDashboard();
-
-}
+                const okNam =
+                    !namTrong ||
+                    String(
+                        p.Nam_trong
+                    ) ===
+                    String(
+                        namTrong
+                    );
 
 
-// ========================================================
-// RENDER FILTERED
-// ========================================================
+                return (
+                    okGiong &&
+                    okHienTrang &&
+                    okNam
+                );
 
-function renderFilteredLayer(){
-
-if(
-filteredLayer
-){
-
-map.removeLayer(
-filteredLayer
-);
-
-filteredLayer =
-null;
-
-}
+            }
+        );
 
 
-if(
-currentFeatures.length ===
-allFeatures.length
-){
+    // Xóa lớp cũ
+    if(
+        filteredLayer
+    ){
 
-if(
-!map.hasLayer(loLayer)
-){
+        map.removeLayer(
+            filteredLayer
+        );
 
-loLayer.addTo(map);
-
-}
-
-return;
-
-}
+    }
 
 
-if(
-map.hasLayer(loLayer)
-){
+    filteredLayer =
+        L.geoJSON(
 
-map.removeLayer(
-loLayer
-);
+            {
 
-}
+                type:
+                    "FeatureCollection",
 
+                features:
+                    result
 
-filteredLayer =
-L.geoJSON(
+            },
 
-{
+            {
 
-type:
-"FeatureCollection",
+                style:
+                    styleLo,
 
-features:
-currentFeatures
+                onEachFeature:
+                    onEachFeature
 
-},
+            }
 
-{
-
-style:
-yieldMode
-? feature =>
-yieldStyle(
-feature.properties
-)
-: normalStyle,
-
-onEachFeature:
-onEachFeature
-
-}
-
-).addTo(map);
+        ).addTo(map);
 
 
-if(
-filteredLayer.getBounds()
-.isValid()
-){
+    updateStatistics(
+        result
+    );
 
-map.fitBounds(
-filteredLayer.getBounds(),
-{
-padding:[20,20]
-}
-);
 
-}
+    if(
+        result.length > 0
+    ){
+
+        const bounds =
+            filteredLayer.getBounds();
+
+
+        if(
+            bounds.isValid()
+        ){
+
+            map.fitBounds(
+                bounds,
+                {
+                    padding:[20,20]
+                }
+            );
+
+        }
+
+    }
+
+
+    setStatus(
+
+        "Đang hiển thị " +
+        result.length +
+        " lô.",
+
+        "success"
+
+    );
 
 }
 
 
 // ========================================================
-// CLEAR FILTER
+// XÓA BỘ LỌC
 // ========================================================
 
 function clearFilters(){
 
-document.getElementById(
-"filterGiong"
-).value = "";
-
-document.getElementById(
-"filterHienTrang"
-).value = "";
-
-document.getElementById(
-"filterNamTrong"
-).value = "";
+    document.getElementById(
+        "filterGiong"
+    ).value = "";
 
 
-currentFeatures =
-[
-...allFeatures
-];
+    document.getElementById(
+        "filterHienTrang"
+    ).value = "";
 
 
-if(
-filteredLayer
-){
-
-map.removeLayer(
-filteredLayer
-);
-
-filteredLayer =
-null;
-
-}
+    document.getElementById(
+        "filterNamTrong"
+    ).value = "";
 
 
-if(
-!map.hasLayer(loLayer)
-){
+    if(
+        filteredLayer
+    ){
 
-loLayer.addTo(map);
+        map.removeLayer(
+            filteredLayer
+        );
 
-}
+        filteredLayer =
+            null;
 
-
-if(
-loLayer.getBounds()
-.isValid()
-){
-
-map.fitBounds(
-loLayer.getBounds()
-);
-
-}
+    }
 
 
-updateAll();
+    if(
+        loLayer
+    ){
+
+        if(
+            !map.hasLayer(
+                loLayer
+            )
+        ){
+
+            loLayer.addTo(map);
+
+        }
 
 
-setStatus(
+        map.fitBounds(
+            loLayer.getBounds()
+        );
 
-"Đã xóa bộ lọc.",
 
-"success"
+        updateStatistics(
+            allFeatures
+        );
 
-);
+    }
+
+
+    setStatus(
+
+        "Đang hiển thị toàn bộ dữ liệu.",
+
+        "success"
+
+    );
 
 }
 
 
 // ========================================================
-// SEARCH
+// TÌM KIẾM
 // ========================================================
 
 function searchLo(){
 
-const keyword =
-document.getElementById(
-"searchInput"
-)
-.value
-.trim()
-.toLowerCase();
+    const keyword =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
 
 
-if(!keyword){
+    if(
+        !keyword
+    ){
 
-alert(
-"Vui lòng nhập thông tin cần tìm."
-);
+        alert(
+            "Vui lòng nhập thông tin cần tìm."
+        );
 
-return;
+        return;
 
-}
+    }
 
 
-let found =
-null;
+    let found =
+        null;
 
 
-const fields = [
+    // Ưu tiên các trường quan trọng
+    const priorityFields = [
 
-"Tenlo_moi",
+        "Tenlo_moi",
+        "Tenlo_cu",
+        "Giong",
+        "NT_doi",
+        "Hien_trang",
+        "Nam_trong"
 
-"Tenlo_cu",
+    ];
 
-"Giong",
 
-"NT_doi",
+    // Tìm ưu tiên
+    for(
+        const feature
+        of allFeatures
+    ){
 
-"Hien_trang",
+        const p =
+            feature.properties ||
+            {};
 
-"Nam_trong",
 
-"Vung",
+        for(
+            const field
+            of priorityFields
+        ){
 
-"Khu_vuc"
+            const value =
+                String(
+                    p[field] ??
+                    ""
+                )
+                .toLowerCase();
 
-];
 
+            if(
+                value.includes(
+                    keyword
+                )
+            ){
 
-for(
-const feature
-of allFeatures
-){
+                found =
+                    feature;
 
-const p =
-feature.properties || {};
+                break;
 
+            }
 
-for(
-const field
-of fields
-){
+        }
 
-const value =
-String(
-p[field] ?? ""
-)
-.toLowerCase();
 
+        if(found)
+            break;
 
-if(
-value.includes(keyword)
-){
+    }
 
-found =
-feature;
 
-break;
+    // Nếu không thấy,
+    // tìm toàn bộ thuộc tính
+    if(!found){
 
-}
+        for(
+            const feature
+            of allFeatures
+        ){
 
-}
+            const p =
+                feature.properties ||
+                {};
 
 
-if(found)
-break;
+            const values =
+                Object.values(p);
 
-}
 
+            const match =
+                values.some(
+                    value =>
+                        String(
+                            value ??
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            keyword
+                        )
+                );
 
-if(!found){
 
-alert(
-"Không tìm thấy dữ liệu phù hợp."
-);
+            if(match){
 
-return;
+                found =
+                    feature;
 
-}
+                break;
 
+            }
 
-if(
-!currentFeatures.includes(found)
-){
+        }
 
-currentFeatures =
-[
-...currentFeatures,
-found
-];
+    }
 
-}
 
+    if(!found){
 
-const temp =
-L.geoJSON(found);
+        alert(
+            "Không tìm thấy lô hoặc thông tin phù hợp."
+        );
 
+        return;
 
-if(
-temp.getBounds()
-.isValid()
-){
+    }
 
-map.fitBounds(
-temp.getBounds(),
-{
-maxZoom:18,
-padding:[30,30]
-}
-);
 
-}
+    const temp =
+        L.geoJSON(
+            found
+        );
 
 
-const targetLayer =
-findLayerByFeature(
-found
-);
+    const bounds =
+        temp.getBounds();
 
 
-if(targetLayer){
+    if(
+        bounds.isValid()
+    ){
 
-selectedLayer =
-targetLayer;
+        map.fitBounds(
 
+            bounds,
 
-targetLayer.setStyle({
+            {
 
-weight:4,
+                maxZoom:18,
 
-color:"#d32f2f",
+                padding:
+                    [40,40]
 
-fillColor:"#ffb74d",
+            }
 
-fillOpacity:.9
+        );
 
-});
+    }
 
 
-targetLayer.openPopup();
+    // tìm layer tương ứng
+    if(
+        loLayer
+    ){
 
-showInfo(
-found.properties
-);
+        loLayer.eachLayer(
+            layer => {
 
-}
+                if(
+                    layer.feature ===
+                    found
+                ){
 
+                    if(
+                        selectedLayer
+                    ){
 
-setStatus(
+                        loLayer.resetStyle(
+                            selectedLayer
+                        );
 
-"Tìm thấy: " +
+                    }
 
-(
-found.properties.Tenlo_moi ||
-found.properties.Tenlo_cu
-),
 
-"success"
+                    selectedLayer =
+                        layer;
 
-);
 
-}
+                    layer.setStyle({
 
+                        weight:4,
 
-// ========================================================
-// FIND LAYER
-// ========================================================
+                        color:"#d32f2f",
 
-function findLayerByFeature(
-feature
-){
+                        fillColor:"#ffb74d",
 
-let result =
-null;
+                        fillOpacity:.85
 
+                    });
 
-const searchLayer =
-layerGroup => {
 
-layerGroup.eachLayer(
-layer => {
+                    layer.openPopup();
 
-if(
-layer.feature === feature
-){
 
-result =
-layer;
+                    showInfo(
+                        found.properties
+                    );
 
-}
+                }
 
-});
+            }
+        );
 
-};
+    }
 
 
-if(
-loLayer &&
-map.hasLayer(loLayer)
-){
+    setStatus(
 
-searchLayer(loLayer);
+        "Đã tìm thấy: " +
+        (
+            found.properties.Tenlo_moi ||
+            found.properties.Tenlo_cu ||
+            "Lô"
+        ),
 
-}
+        "success"
 
-
-if(
-!result &&
-filteredLayer
-&&
-map.hasLayer(filteredLayer)
-){
-
-searchLayer(filteredLayer);
-
-}
-
-
-return result;
-
-}
-
-
-// ========================================================
-// TOGGLE LÔ
-// ========================================================
-
-document.getElementById(
-"toggleLo"
-)
-.addEventListener(
-"change",
-function(){
-
-if(this.checked){
-
-if(
-filteredLayer
-&&
-currentFeatures.length !==
-allFeatures.length
-){
-
-filteredLayer.addTo(map);
-
-}
-else{
-
-loLayer.addTo(map);
-
-}
-
-}
-else{
-
-if(loLayer)
-map.removeLayer(loLayer);
-
-if(filteredLayer)
-map.removeLayer(filteredLayer);
-
-}
-
-});
-
-
-// ========================================================
-// BẢN ĐỒ CHUYÊN ĐỀ NĂNG SUẤT
-// ========================================================
-
-function toggleYieldMap(){
-
-yieldMode =
-!yieldMode;
-
-
-if(
-yieldMode
-){
-
-if(
-filteredLayer
-){
-
-filteredLayer.eachLayer(
-layer => {
-
-layer.setStyle(
-yieldStyle(
-layer.feature.properties
-)
-);
-
-});
-
-}
-else{
-
-loLayer.eachLayer(
-layer => {
-
-layer.setStyle(
-yieldStyle(
-layer.feature.properties
-)
-);
-
-});
-
-}
-
-
-addYieldLegend();
-
-
-setStatus(
-"Bản đồ chuyên đề năng suất 2023",
-"success"
-);
-
-}
-else{
-
-if(
-filteredLayer
-){
-
-filteredLayer.eachLayer(
-layer => {
-
-layer.setStyle(
-normalStyle()
-);
-
-});
-
-}
-else{
-
-loLayer.eachLayer(
-layer => {
-
-layer.setStyle(
-normalStyle()
-);
-
-});
-
-}
-
-
-removeYieldLegend();
-
-
-setStatus(
-"Đã trở lại bản đồ thông thường.",
-"success"
-);
-
-}
+    );
 
 }
 
 
 // ========================================================
-// LEGEND NĂNG SUẤT
+// RESET BẢN ĐỒ
 // ========================================================
 
-function addYieldLegend(){
+function resetMap(){
 
-if(yieldLegend)
-return;
+    document.getElementById(
+        "searchInput"
+    ).value = "";
 
 
-yieldLegend =
-L.control({
-position:"bottomright"
-});
+    clearFilters();
 
 
-yieldLegend.onAdd =
-function(){
+    if(
+        selectedLayer &&
+        loLayer
+    ){
 
-const div =
-L.DomUtil.create(
-"div",
-"legend"
-);
+        loLayer.resetStyle(
+            selectedLayer
+        );
 
+    }
 
-div.innerHTML = `
 
-<div class="legend-title">
-NĂNG SUẤT 2023
-</div>
+    selectedLayer =
+        null;
 
-<div class="legend-item">
 
-<div class="legend-color"
-style="background:#d73027">
-</div>
+    infoContent.innerHTML = `
 
-&lt; 500
-
-</div>
-
-
-<div class="legend-item">
-
-<div class="legend-color"
-style="background:#fc8d59">
-</div>
-
-500 - 700
-
-</div>
-
-
-<div class="legend-item">
-
-<div class="legend-color"
-style="background:#fee08b">
-</div>
-
-700 - 900
-
-</div>
-
-
-<div class="legend-item">
-
-<div class="legend-color"
-style="background:#91cf60">
-</div>
-
-900 - 1.100
-
-</div>
-
-
-<div class="legend-item">
-
-<div class="legend-color"
-style="background:#1a9850">
-</div>
-
-&gt; 1.100
-
-</div>
-
-`;
-
-return div;
-
-};
-
-
-yieldLegend.addTo(map);
-
-}
-
-
-// ========================================================
-// REMOVE LEGEND
-// ========================================================
-
-function removeYieldLegend(){
-
-if(yieldLegend){
-
-map.removeControl(
-yieldLegend
-);
-
-yieldLegend =
-null;
-
-}
-
-}
-
-
-// ========================================================
-// UPDATE ALL
-// ========================================================
-
-function updateAll(){
-
-updateSideStatistics();
-
-updateDashboard();
-
-updateTable();
-
-}
-
-
-// ========================================================
-// SIDEBAR STATISTICS
-// ========================================================
-
-function updateSideStatistics(){
-
-let area = 0;
-
-let production2023 = 0;
-
-let weightedYield = 0;
-
-
-currentFeatures.forEach(
-feature => {
-
-const p =
-feature.properties || {};
-
-const a =
-getArea(p);
-
-const y =
-getYield(p,2023);
-
-area += a;
-
-production2023 +=
-getProduction(
-p,
-2023
-);
-
-weightedYield +=
-a * y;
-
-});
-
-
-const averageYield =
-area > 0
-?
-weightedYield / area
-:
-0;
-
-
-document.getElementById(
-"sideLots"
-).textContent =
-formatNumber(
-currentFeatures.length,
-0
-);
-
-
-document.getElementById(
-"sideArea"
-).textContent =
-formatNumber(
-area,
-2
-) +
-" ha";
-
-
-document.getElementById(
-"sideYield"
-).textContent =
-formatNumber(
-averageYield,
-2
-) +
-" kg/ha";
-
-
-document.getElementById(
-"sideProduction"
-).textContent =
-formatNumber(
-production2023,
-2
-) +
-" tấn";
-
-}
-
-
-// ========================================================
-// DASHBOARD
-// ========================================================
-
-function updateDashboard(){
-
-let area = 0;
-
-let weightedYield = 0;
-
-let production2023 = 0;
-
-
-currentFeatures.forEach(
-feature => {
-
-const p =
-feature.properties || {};
-
-const a =
-getArea(p);
-
-const y =
-getYield(p,2023);
-
-area += a;
-
-weightedYield +=
-a * y;
-
-production2023 +=
-getProduction(
-p,
-2023
-);
-
-});
-
-
-const averageYield =
-area > 0
-?
-weightedYield / area
-:
-0;
-
-
-document.getElementById(
-"kpiLots"
-).textContent =
-formatNumber(
-currentFeatures.length,
-0
-);
-
-
-document.getElementById(
-"kpiArea"
-).textContent =
-formatNumber(
-area,
-2
-);
-
-
-document.getElementById(
-"kpiYield"
-).textContent =
-formatNumber(
-averageYield,
-2
-);
-
-
-document.getElementById(
-"kpiProduction"
-).textContent =
-formatNumber(
-production2023,
-2
-);
-
-
-document.getElementById(
-"dashboardFilterResult"
-).textContent =
-
-"Đang phân tích " +
-
-formatNumber(
-currentFeatures.length,
-0
-) +
-
-" lô sau khi lọc";
-
-
-updateCharts();
-
-}
-
-
-// ========================================================
-// TÍNH NĂNG SUẤT TRUNG BÌNH THEO NĂM
-//
-// Trọng số diện tích
-// ========================================================
-
-function calculateAverageYield(
-year
-){
-
-let area = 0;
-
-let weighted = 0;
-
-
-currentFeatures.forEach(
-feature => {
-
-const p =
-feature.properties || {};
-
-const a =
-getArea(p);
-
-const y =
-getYield(
-p,
-year
-);
-
-
-area += a;
-
-weighted +=
-a * y;
-
-});
-
-
-if(area === 0)
-return 0;
-
-
-return weighted / area;
-
-}
-
-
-// ========================================================
-// TỔNG SẢN LƯỢNG THEO NĂM
-// ========================================================
-
-function calculateProduction(
-year
-){
-
-let total = 0;
-
-
-currentFeatures.forEach(
-feature => {
-
-total +=
-getProduction(
-feature.properties,
-year
-);
-
-});
-
-
-return total;
-
-}
-
-
-// ========================================================
-// UPDATE CHARTS
-// ========================================================
-
-function updateCharts(){
-
-const years = [
-
-2017,
-2018,
-2019,
-2020,
-2021,
-2022,
-2023
-
-];
-
-
-const yieldValues =
-years.map(
-year =>
-calculateAverageYield(
-year
-)
-);
-
-
-const productionValues =
-years.map(
-year =>
-calculateProduction(
-year
-)
-);
-
-
-// --------------------------------------------------------
-// NĂNG SUẤT
-// --------------------------------------------------------
-
-if(yieldChart){
-
-yieldChart.destroy();
-
-}
-
-
-yieldChart =
-new Chart(
-
-document
-.getElementById(
-"yieldChart"
-),
-
-{
-
-type:"line",
-
-data:{
-
-labels:
-years,
-
-datasets:[
-
-{
-
-label:
-"Năng suất bình quân (kg/ha)",
-
-data:
-yieldValues,
-
-borderWidth:3,
-
-tension:.25,
-
-fill:false
-
-}
-
-]
-
-},
-
-options:{
-
-responsive:true,
-
-maintainAspectRatio:false,
-
-plugins:{
-
-legend:{
-display:true
-}
-
-},
-
-scales:{
-
-y:{
-
-beginAtZero:true,
-
-title:{
-
-display:true,
-
-text:
-"kg/ha"
-
-}
-
-},
-
-x:{
-
-title:{
-
-display:true,
-
-text:
-"Năm"
-
-}
-
-}
-
-}
-
-}
-
-}
-
-);
-
-
-// --------------------------------------------------------
-// SẢN LƯỢNG
-// --------------------------------------------------------
-
-if(productionChart){
-
-productionChart.destroy();
-
-}
-
-
-productionChart =
-new Chart(
-
-document
-.getElementById(
-"productionChart"
-),
-
-{
-
-type:"bar",
-
-data:{
-
-labels:
-years,
-
-datasets:[
-
-{
-
-label:
-"Tổng sản lượng (tấn)",
-
-data:
-productionValues,
-
-borderWidth:1
-
-}
-
-]
-
-},
-
-options:{
-
-responsive:true,
-
-maintainAspectRatio:false,
-
-plugins:{
-
-legend:{
-display:true
-}
-
-},
-
-scales:{
-
-y:{
-
-beginAtZero:true,
-
-title:{
-
-display:true,
-
-text:
-"Tấn"
-
-}
-
-},
-
-x:{
-
-title:{
-
-display:true,
-
-text:
-"Năm"
-
-}
-
-}
-
-}
-
-}
-
-}
-
-);
-
-}
-
-
-// ========================================================
-// UPDATE TABLE
-// ========================================================
-
-function updateTable(){
-
-const tbody =
-document.getElementById(
-"tableBody"
-);
-
-
-tbody.innerHTML = "";
-
-
-currentFeatures.forEach(
-(feature,index) => {
-
-const p =
-feature.properties || {};
-
-
-const tr =
-document.createElement(
-"tr"
-);
-
-
-tr.innerHTML = `
-
-<td>
-${index+1}
-</td>
-
-<td>
-<b>
-${escapeHtml(
-p.Tenlo_moi
-)}
-</b>
-</td>
-
-<td>
-${escapeHtml(
-p.Tenlo_cu
-)}
-</td>
-
-<td>
-${escapeHtml(
-p.NT_doi
-)}
-</td>
-
-<td>
-<span class="badge">
-${escapeHtml(
-p.Giong
-)}
-</span>
-</td>
-
-<td>
-${escapeHtml(
-p.Nam_trong
-)}
-</td>
-
-<td>
-${getAge(p)}
-</td>
-
-<td>
-${formatNumber(
-getArea(p),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2017),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2018),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2019),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2020),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2021),
-2
-)}
-</td>
-
-<td>
-${formatNumber(
-getYield(p,2022),
-2
-)}
-</td>
-
-<td>
-<b>
-${formatNumber(
-getYield(p,2023),
-2
-)}
-</b>
-</td>
-
-<td>
-<b>
-${formatNumber(
-getProduction(p,2023),
-2
-)}
-</b>
-</td>
-
-<td>
-${escapeHtml(
-p.Hien_trang
-)}
-</td>
-
-`;
-
-
-tr.addEventListener(
-"click",
-function(){
-
-openFeatureFromTable(
-feature
-);
-
-});
-
-
-tbody.appendChild(
-tr
-);
-
-});
-
-}
-
-
-// ========================================================
-// CLICK TABLE
-// ========================================================
-
-function openFeatureFromTable(
-feature
-){
-
-openMap();
-
-
-const temp =
-L.geoJSON(feature);
-
-
-if(
-temp.getBounds()
-.isValid()
-){
-
-map.fitBounds(
-temp.getBounds(),
-{
-
-maxZoom:18,
-
-padding:[30,30]
-
-}
-
-);
-
-}
-
-
-const layer =
-findLayerByFeature(
-feature
-);
-
-
-if(layer){
-
-selectedLayer =
-layer;
-
-
-layer.setStyle({
-
-weight:4,
-
-color:"#d32f2f",
-
-fillColor:"#ffb74d",
-
-fillOpacity:.9
-
-});
-
-
-layer.openPopup();
-
-showInfo(
-feature.properties
-);
-
-}
-
-}
-
-
-// ========================================================
-// TABLE SEARCH
-// ========================================================
-
-function filterTable(){
-
-const keyword =
-document.getElementById(
-"tableSearch"
-)
-.value
-.toLowerCase()
-.trim();
-
-
-const rows =
-document.querySelectorAll(
-"#tableBody tr"
-);
-
-
-rows.forEach(
-row => {
-
-const text =
-row.textContent
-.toLowerCase();
-
-
-row.style.display =
-text.includes(keyword)
-?
-""
-:
-"none";
-
-});
-
-}
-
-
-// ========================================================
-// VIEW MAP
-// ========================================================
-
-function openMap(){
-
-document
-.getElementById(
-"dashboardView"
-)
-.classList.remove(
-"active"
-);
-
-
-document
-.getElementById(
-"mapView"
-)
-.classList.add(
-"active"
-);
-
-
-document
-.querySelectorAll(
-".tab"
-)
-.forEach(
-tab =>
-tab.classList.remove(
-"active"
-)
-);
-
-
-document
-.querySelector(
-".tab"
-)
-.classList.add(
-"active"
-);
-
-
-setTimeout(
-function(){
-
-map.invalidateSize();
-
-},
-100
-);
-
-}
-
-
-// ========================================================
-// VIEW DASHBOARD
-// ========================================================
-
-function openDashboard(){
-
-document
-.getElementById(
-"mapView"
-)
-.classList.remove(
-"active"
-);
-
-
-document
-.getElementById(
-"dashboardView"
-)
-.classList.add(
-"active"
-);
-
-
-document
-.querySelectorAll(
-".tab"
-)
-.forEach(
-tab =>
-tab.classList.remove(
-"active"
-)
-);
-
-
-document
-.querySelectorAll(
-".tab"
-)[1]
-.classList.add(
-"active"
-);
-
-
-updateDashboard();
-
-}
-
-
-// ========================================================
-// TAB
-// ========================================================
-
-function showView(
-viewId,
-element
-){
-
-document
-.querySelectorAll(
-".view"
-)
-.forEach(
-view =>
-view.classList.remove(
-"active"
-)
-);
-
-
-document
-.getElementById(
-viewId
-)
-.classList.add(
-"active"
-);
-
-
-document
-.querySelectorAll(
-".tab"
-)
-.forEach(
-tab =>
-tab.classList.remove(
-"active"
-)
-);
-
-
-element.classList.add(
-"active"
-);
-
-
-if(
-viewId ===
-"mapView"
-){
-
-setTimeout(
-() =>
-map.invalidateSize(),
-100
-);
-
-}
-
-}
-
-
-// ========================================================
-// RESET
-// ========================================================
-
-function resetAll(){
-
-document.getElementById(
-"searchInput"
-).value = "";
-
-
-clearFilters();
-
-
-document.getElementById(
-"tableSearch"
-).value = "";
-
-
-if(selectedLayer){
-
-if(
-yieldMode
-){
-
-selectedLayer.setStyle(
-yieldStyle(
-selectedLayer
-.feature
-.properties
-)
-);
-
-}
-else{
-
-selectedLayer.setStyle(
-normalStyle()
-);
-
-}
-
-}
-
-
-selectedLayer =
-null;
-
-
-document.getElementById(
-"infoContent"
-).innerHTML = `
-
-<div style="
-text-align:center;
-color:#777;
-padding:10px;
-">
+<div class="info-empty">
 
 Click vào một lô trên bản đồ
+để xem thông tin.
 
 </div>
 
@@ -4414,7 +2603,100 @@ Click vào một lô trên bản đồ
 
 
 // ========================================================
-// START
+// ENTER ĐỂ TÌM KIẾM
+// ========================================================
+
+document
+.getElementById(
+    "searchInput"
+)
+.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            searchLo();
+
+        }
+
+    }
+);
+
+
+// ========================================================
+// LEGEND
+// ========================================================
+
+function addLegend(){
+
+    const legend =
+        L.control({
+            position:
+                "bottomright"
+        });
+
+
+    legend.onAdd =
+        function(){
+
+            const div =
+                L.DomUtil.create(
+                    "div",
+                    "legend"
+                );
+
+
+            div.innerHTML = `
+
+<div class="legend-title">
+    CHÚ GIẢI
+</div>
+
+<div class="legend-item">
+
+<div
+class="legend-color"
+style="
+background:#66bb6a;
+opacity:.55;
+">
+</div>
+
+Lô cao su
+
+</div>
+
+<div class="legend-item">
+
+<div
+class="legend-color"
+style="
+background:#ffb74d;
+">
+</div>
+
+Lô đang chọn
+
+</div>
+
+`;
+
+            return div;
+
+        };
+
+
+    legend.addTo(map);
+
+}
+
+
+// ========================================================
+// CHẠY
 // ========================================================
 
 loadGeoJSON();
