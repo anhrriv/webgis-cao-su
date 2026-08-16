@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>WebGIS Quản lý vườn cao su</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <!-- CSS của chúng ta -->
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    />
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        🌱
+    </div>
+
+    <div>
+        <h1>WEBGIS QUẢN LÝ VƯỜN CAO SU</h1>
+        <div class="subtitle">
+            Hệ thống thông tin địa lý quản lý và phân tích vườn cây
+        </div>
+    </div>
+
+</header>
+
+
+<div class="main-container">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside id="sidebar">
+
+        <h2>LỚP DỮ LIỆU</h2>
+
+        <label class="layer-item">
+
+            <input
+                type="checkbox"
+                id="toggleLo"
+                checked
+            >
+
+            Lô cao su
+
+        </label>
+
+
+        <hr>
+
+
+        <h2>TRA CỨU</h2>
+
+
+        <label>
+            Mã lô
+        </label>
+
+        <input
+            type="text"
+            id="searchMaLo"
+            placeholder="Ví dụ: L001"
+        >
+
+
+        <button
+            onclick="searchLo()"
+        >
+            🔍 Tìm kiếm
+        </button>
+
+
+        <button
+            onclick="resetMap()"
+        >
+            ↺ Hiển thị tất cả
+        </button>
+
+
+        <hr>
+
+
+        <h2>THÔNG TIN LÔ</h2>
+
+        <div id="infoContent">
+
+            <p>
+                Click vào một lô trên bản đồ
+                để xem thông tin.
+            </p>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- ================= MAP ================= -->
+
+    <main id="map"></main>
+
+
+</div>
+
+
+<!-- Leaflet -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<!-- JavaScript -->
+
+<script
+    src="js/app.js">
+</script>
+
+
+</body>
+
+</html>
