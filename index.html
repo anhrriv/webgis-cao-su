@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WebGIS Quản lý vườn cao su</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" id="leafletCss">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Arial,sans-serif;color:#263238;background:#f3f5f4}
 #header{height:62px;background:linear-gradient(90deg,#14532d,#2e7d32);color:#fff;display:flex;align-items:center;padding:0 18px;box-shadow:0 2px 5px #0003;position:relative;z-index:1000}.logo{font-size:28px;margin-right:10px}.title{font-size:20px;font-weight:700}.subtitle{font-size:11px;opacity:.9;margin-top:3px}
@@ -39,11 +40,25 @@ input,select{width:100%;padding:8px;border:1px solid #bbb;border-radius:5px;back
 <div class="charts"><div class="card"><h3>📈 Năng suất bình quân theo năm</h3><div class="chartbox"><canvas id="yieldChart"></canvas></div></div><div class="card"><h3>📊 Tổng sản lượng theo năm</h3><div class="chartbox"><canvas id="prodChart"></canvas></div></div></div>
 <div class="card"><div class="table-head"><h3 style="margin:0">📋 CHI TIẾT CÁC LÔ SAU LỌC</h3><input id="tableSearch" placeholder="🔍 Tìm trong bảng..."></div><div class="table-wrap"><table class="data"><thead><tr><th>STT</th><th>Mã lô mới</th><th>Mã lô cũ</th><th>Đội</th><th>Giống</th><th>Năm trồng</th><th>Tuổi</th><th>DT ha</th><th>NS 2017</th><th>NS 2018</th><th>NS 2019</th><th>NS 2020</th><th>NS 2021</th><th>NS 2022</th><th>NS 2023</th><th>SL 2023 tấn</th><th>Hiện trạng</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 </div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+<script>
+/* Leaflet is loaded dynamically with a fallback CDN so a temporary CDN failure does not leave the map blank. */
+function loadLeaflet(){return new Promise((resolve,reject)=>{
+  if(window.L) return resolve();
+  const urls=[
+    "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+    "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+  ];
+  let i=0;
+  function next(){
+    if(i>=urls.length) return reject(new Error("Không tải được thư viện bản đồ Leaflet từ CDN."));
+    const sc=document.createElement("script"); sc.src=urls[i++]; sc.onload=()=>resolve(); sc.onerror=()=>next(); document.head.appendChild(sc);
+  } next();
+});}
+</script>
 <script>
 'use strict';
-const GEOJSON_URL='lo.geojson';
+const APP_VERSION='2.1.0';
+const GEOJSON_URL='./lo.geojson';
 let map,loLayer,filteredLayer,allFeatures=[],currentFeatures=[],selectedLayer=null,yieldMode=false,yieldLegend=null,yieldChart=null,prodChart=null;
 const $=id=>document.getElementById(id);
 function setStatus(t,type=''){const e=$('status');e.textContent=t;e.className=type}
@@ -59,7 +74,7 @@ function popup(p){return `<div style="min-width:230px;font-size:12px"><b style="
 function info(p){$('info').innerHTML=`<table class="info-table"><tr><td class="key">Mã lô mới</td><td>${text(p.Tenlo_moi)}</td></tr><tr><td class="key">Mã lô cũ</td><td>${text(p.Tenlo_cu)}</td></tr><tr><td class="key">Đội</td><td>${text(p.NT_doi)}</td></tr><tr><td class="key">Giống</td><td>${text(p.Giong)}</td></tr><tr><td class="key">Năm trồng</td><td>${text(p.Nam_trong)}</td></tr><tr><td class="key">Tuổi</td><td>${age(p)} năm</td></tr><tr><td class="key">Hạng đất</td><td>${text(p.Hang_dat)}</td></tr><tr><td class="key">Cao trình</td><td>${num(p.Caotrinh,0)} m</td></tr><tr><td class="key">Khoảng cách</td><td>${text(p.KC)}</td></tr><tr><td class="key">Mật độ</td><td>${text(p.Mat_do)}</td></tr><tr><td class="key">Diện tích</td><td>${num(area(p))} ha</td></tr><tr><td class="key">Hiện trạng</td><td>${text(p.Hien_trang)}</td></tr></table><hr><b>📈 NĂNG SUẤT</b><table class="info-table">${[2017,2018,2019,2020,2021,2022,2023].map(y=>`<tr><td>${y}</td><td>${num(yld(p,y))} kg/ha</td></tr>`).join('')}</table><hr><b>📦 SẢN LƯỢNG 2023:</b> ${num(prod(p,2023))} tấn`}
 function onEach(feature,layer){layer.bindPopup(popup(feature.properties||{}));layer.on({mouseover:e=>e.target.setStyle({weight:3,color:'#ff0000',fillOpacity:.85}),mouseout:e=>{if(e.target!==selectedLayer)e.target.setStyle(yieldMode?yieldStyle(e.target.feature.properties):normalStyle())},click:e=>{if(selectedLayer&&selectedLayer!==e.target)selectedLayer.setStyle(yieldMode?yieldStyle(selectedLayer.feature.properties):normalStyle());selectedLayer=e.target;e.target.setStyle({weight:4,color:'#d32f2f',fillColor:'#ffb74d',fillOpacity:.9});info(feature.properties||{});}})}
 function initMap(){map=L.map('map').setView([13.75,108],10);const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap contributors'});const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,attribution:'© Esri'});osm.addTo(map);L.control.layers({'🗺️ Bản đồ':osm,'🛰️ Vệ tinh':sat}).addTo(map)}
-async function loadData(){setStatus('Đang tải lo.geojson...');const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),20000);try{const r=await fetch(GEOJSON_URL+'?v='+Date.now(),{cache:'no-store',signal:controller.signal});clearTimeout(timer);if(!r.ok)throw new Error(`HTTP ${r.status} - không tìm thấy lo.geojson`);const data=await r.json();if(!data||data.type!=='FeatureCollection'||!Array.isArray(data.features))throw new Error('GeoJSON không đúng dạng FeatureCollection');allFeatures=data.features;currentFeatures=[...allFeatures];loLayer=L.geoJSON(data,{style:normalStyle,onEachFeature:onEach}).addTo(map);if(loLayer.getBounds().isValid())map.fitBounds(loLayer.getBounds(),{padding:[20,20]});populateFilters();updateAll();setStatus(`Đã tải thành công ${allFeatures.length.toLocaleString('vi-VN')} lô.`,'success')}catch(e){clearTimeout(timer);console.error(e);setStatus('Không tải được dữ liệu: '+(e.name==='AbortError'?'quá 20 giây.':e.message),'error');alert('WebGIS không đọc được lo.geojson.\n\nKiểm tra 3 điều:\n1. Tên file phải là lo.geojson\n2. lo.geojson phải nằm cùng thư mục với index.html\n3. Repository phải được GitHub Pages publish đúng nhánh.\n\nChi tiết: '+e.message)}}
+async function loadData(){setStatus('Đang tải lo.geojson...');const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),20000);try{const r=await fetch(GEOJSON_URL+'?v='+Date.now(),{cache:'no-store',signal:controller.signal});clearTimeout(timer);if(!r.ok)throw new Error(`HTTP ${r.status} - không tìm thấy lo.geojson`);const data=await r.json();if(!data||data.type!=='FeatureCollection'||!Array.isArray(data.features))throw new Error('GeoJSON không đúng dạng FeatureCollection');allFeatures=data.features;currentFeatures=[...allFeatures];loLayer=L.geoJSON(data,{style:normalStyle,onEachFeature:onEach}).addTo(map);if(loLayer.getBounds().isValid())map.fitBounds(loLayer.getBounds(),{padding:[20,20]});populateFilters();updateAll();setStatus(`WebGIS v${APP_VERSION}: đã tải thành công ${allFeatures.length.toLocaleString('vi-VN')} lô.`,'success')}catch(e){clearTimeout(timer);console.error(e);setStatus('Không tải được dữ liệu: '+(e.name==='AbortError'?'quá 20 giây.':e.message),'error');alert('WebGIS không đọc được lo.geojson.\n\nKiểm tra 3 điều:\n1. Tên file phải là lo.geojson\n2. lo.geojson phải nằm cùng thư mục với index.html\n3. Repository phải được GitHub Pages publish đúng nhánh.\n\nChi tiết: '+e.message)}}
 function populateFilters(){const maps=[['filterGiong','Giong'],['filterHT','Hien_trang'],['filterNam','Nam_trong']];maps.forEach(([id,key])=>{const s=new Set(allFeatures.map(f=>f.properties?.[key]).filter(v=>v!==undefined&&v!==null&&String(v).trim()!==''));const el=$(id);[...s].sort((a,b)=>String(a).localeCompare(String(b),'vi')).forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)})})}
 function renderLayer(){if(filteredLayer){map.removeLayer(filteredLayer);filteredLayer=null}if(currentFeatures.length===allFeatures.length){if(!map.hasLayer(loLayer))loLayer.addTo(map);if(yieldMode)loLayer.eachLayer(l=>l.setStyle(yieldStyle(l.feature.properties)));return}if(map.hasLayer(loLayer))map.removeLayer(loLayer);filteredLayer=L.geoJSON({type:'FeatureCollection',features:currentFeatures},{style:f=>yieldMode?yieldStyle(f.properties):normalStyle(),onEachFeature:onEach}).addTo(map);if(filteredLayer.getBounds().isValid())map.fitBounds(filteredLayer.getBounds(),{padding:[20,20]})}
 function applyFilters(){const g=$('filterGiong').value,h=$('filterHT').value,n=$('filterNam').value;currentFeatures=allFeatures.filter(f=>{const p=f.properties||{};return(!g||String(p.Giong)===g)&&(!h||String(p.Hien_trang)===h)&&(!n||String(p.Nam_trong)===n)});renderLayer();updateAll();setStatus(`Đã lọc ${currentFeatures.length.toLocaleString('vi-VN')} lô.`,'success');openDashboard()}
@@ -68,7 +83,23 @@ function search(){const q=$('searchInput').value.trim().toLowerCase();if(!q)retu
 function findLayer(feature){let found=null;[loLayer,filteredLayer].forEach(g=>{if(g&&map.hasLayer(g))g.eachLayer(l=>{if(l.feature===feature)found=l})});return found}
 function stats(){let a=0,w=0,sl=0;currentFeatures.forEach(f=>{const p=f.properties||{},ar=area(p);a+=ar;w+=ar*yld(p,2023);sl+=prod(p,2023)});const av=a?w/a:0;$('sideLots').textContent=currentFeatures.length.toLocaleString('vi-VN');$('sideArea').textContent=num(a)+' ha';$('sideYield').textContent=num(av)+' kg/ha';$('sideProd').textContent=num(sl)+' tấn';$('kLots').textContent=currentFeatures.length.toLocaleString('vi-VN');$('kArea').textContent=num(a);$('kYield').textContent=num(av);$('kProd').textContent=num(sl);$('dashNote').textContent=`Đang phân tích ${currentFeatures.length.toLocaleString('vi-VN')} lô sau lọc`}
 function avgYield(y){let a=0,w=0;currentFeatures.forEach(f=>{const ar=area(f.properties||{});a+=ar;w+=ar*yld(f.properties||{},y)});return a?w/a:0}function totalProd(y){return currentFeatures.reduce((s,f)=>s+prod(f.properties||{},y),0)}
-function charts(){const years=[2017,2018,2019,2020,2021,2022,2023];if(yieldChart)yieldChart.destroy();if(prodChart)prodChart.destroy();yieldChart=new Chart($('yieldChart'),{type:'line',data:{labels:years,datasets:[{label:'Năng suất bình quân (kg/ha)',data:years.map(avgYield),borderWidth:3,tension:.25}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});prodChart=new Chart($('prodChart'),{type:'bar',data:{labels:years,datasets:[{label:'Tổng sản lượng (tấn)',data:years.map(totalProd),borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}})}
+function svgChart(canvasId, labels, values, type, title){
+  const c=$(canvasId); if(!c) return;
+  const box=c.parentElement; const W=Math.max(520,box.clientWidth||600), H=270, ml=52,mr=18,mt=18,mb=42;
+  const max=Math.max(...values,1)*1.12, iw=W-ml-mr, ih=H-mt-mb;
+  const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  let svg=`<svg id="${canvasId}" viewBox="0 0 ${W} ${H}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(title)}">`;
+  for(let i=0;i<=4;i++){const y=mt+ih*i/4, val=max*(1-i/4);svg+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#e0e0e0"/><text x="${ml-7}" y="${y+4}" text-anchor="end" font-size="10" fill="#666">${Number(val).toLocaleString('vi-VN',{maximumFractionDigits:0})}</text>`;}
+  if(type==='bar'){
+    const bw=iw/labels.length*.58; labels.forEach((lab,i)=>{const x=ml+iw*(i+.5)/labels.length, h=(values[i]/max)*ih, y=mt+ih-h; svg+=`<rect x="${x-bw/2}" y="${y}" width="${bw}" height="${h}" rx="3" fill="#43a047" opacity=".85"><title>${esc(lab)}: ${Number(values[i]).toLocaleString('vi-VN',{maximumFractionDigits:2})}</title></rect><text x="${x}" y="${H-18}" text-anchor="middle" font-size="10" fill="#555">${esc(lab)}</text>`;});
+  } else {
+    const pts=labels.map((lab,i)=>[ml+iw*(i/(labels.length-1||1)),mt+ih-(values[i]/max)*ih]);
+    svg+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#2e7d32" stroke-width="3"/>`;
+    pts.forEach((pt,i)=>svg+=`<circle cx="${pt[0]}" cy="${pt[1]}" r="4" fill="#2e7d32"><title>${esc(labels[i])}: ${Number(values[i]).toLocaleString('vi-VN',{maximumFractionDigits:2})}</title></circle><text x="${pt[0]}" y="${H-18}" text-anchor="middle" font-size="10" fill="#555">${esc(labels[i])}</text>`);
+  }
+  svg+='</svg>'; c.outerHTML=svg;
+}
+function charts(){const years=[2017,2018,2019,2020,2021,2022,2023];svgChart('yieldChart',years,years.map(avgYield),'line','Năng suất bình quân');svgChart('prodChart',years,years.map(totalProd),'bar','Tổng sản lượng');}
 function table(){const body=$('tbody');body.innerHTML='';currentFeatures.forEach((f,i)=>{const p=f.properties||{},tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td><b>${text(p.Tenlo_moi)}</b></td><td>${text(p.Tenlo_cu)}</td><td>${text(p.NT_doi)}</td><td>${text(p.Giong)}</td><td>${text(p.Nam_trong)}</td><td>${age(p)}</td><td>${num(area(p))}</td>${[2017,2018,2019,2020,2021,2022,2023].map(y=>`<td>${num(yld(p,y))}</td>`).join('')}<td><b>${num(prod(p,2023))}</b></td><td>${text(p.Hien_trang)}</td>`;tr.onclick=()=>focusFeature(f);body.appendChild(tr)})}
 function focusFeature(f){openMap();const t=L.geoJSON(f);if(t.getBounds().isValid())map.fitBounds(t.getBounds(),{maxZoom:18,padding:[25,25]});const l=findLayer(f);if(l){selectedLayer=l;l.setStyle({weight:4,color:'#d32f2f',fillColor:'#ffb74d',fillOpacity:.9});l.openPopup();info(f.properties)}}
 function updateAll(){stats();charts();table()}
@@ -79,7 +110,19 @@ function addLegend(){if(yieldLegend)return;yieldLegend=L.control({position:'bott
 function removeLegend(){if(yieldLegend){map.removeControl(yieldLegend);yieldLegend=null}}
 function resetAll(){$('searchInput').value='';clearFilters();$('tableSearch').value='';$('info').innerHTML='<div style="text-align:center;color:#777;padding:10px">Chọn một lô trên bản đồ hoặc bảng.</div>'}
 $('mapTab').onclick=openMap;$('dashTab').onclick=openDashboard;$('backMap').onclick=openMap;$('openDash').onclick=openDashboard;$('applyBtn').onclick=applyFilters;$('clearBtn').onclick=clearFilters;$('searchBtn').onclick=search;$('resetBtn').onclick=resetAll;$('yieldBtn').onclick=toggleYield;$('tableSearch').oninput=()=>{const q=$('tableSearch').value.toLowerCase();document.querySelectorAll('#tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none')};$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')search()});$('toggleLo').onchange=e=>{const l=filteredLayer&&map.hasLayer(filteredLayer)?filteredLayer:loLayer;if(l){if(e.target.checked)l.addTo(map);else map.removeLayer(l)}};
-initMap();loadData();
+async function startApp(){
+  setStatus('Đang khởi tạo WebGIS v'+APP_VERSION+'...');
+  try{
+    await loadLeaflet();
+    initMap();
+    await loadData();
+  }catch(e){
+    console.error(e);
+    setStatus('Không khởi tạo được bản đồ: '+e.message,'error');
+    alert('Không thể khởi tạo WebGIS.\n\n'+e.message+'\n\nHãy kiểm tra kết nối Internet và thử Ctrl + F5.');
+  }
+}
+startApp();
 </script>
 </body>
 </html>
