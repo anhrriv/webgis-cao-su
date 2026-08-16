@@ -3,655 +3,621 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-          content="WebGIS quản lý và phân tích vườn cao su">
+<title>WebGIS Quản lý vườn cao su</title>
 
-    <title>WebGIS Quản lý vườn cao su</title>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
+<style>
 
-    <!-- =====================================================
-         LEAFLET CSS
-    ====================================================== -->
+/* =====================================================
+   RESET
+===================================================== */
 
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+*{
+    box-sizing:border-box;
+}
 
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow:hidden;
+}
 
-    <!-- =====================================================
-         CSS
-    ====================================================== -->
 
-    <style>
+/* =====================================================
+   HEADER
+===================================================== */
 
-        /* =====================================================
-           RESET
-        ====================================================== */
+#header{
 
-        * {
-            box-sizing: border-box;
-        }
+    height:64px;
 
+    background:
+    linear-gradient(
+        90deg,
+        #14532d,
+        #1b5e20,
+        #2e7d32
+    );
 
-        html,
-        body {
+    color:white;
 
-            width: 100%;
-            height: 100%;
+    display:flex;
 
-            margin: 0;
-            padding: 0;
+    align-items:center;
 
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
+    padding:0 20px;
 
-            overflow: hidden;
-        }
+    box-shadow:
+    0 2px 5px
+    rgba(0,0,0,0.25);
 
+    position:relative;
 
-        /* =====================================================
-           HEADER
-        ====================================================== */
+    z-index:1000;
+}
 
-        #header {
 
-            height: 64px;
+.logo{
 
-            background:
-                linear-gradient(
-                    90deg,
-                    #14532d,
-                    #1b5e20,
-                    #2e7d32
-                );
+    font-size:32px;
 
-            color: white;
+    margin-right:12px;
+}
 
-            display: flex;
 
-            align-items: center;
+.header-title{
 
-            padding: 0 20px;
+    font-size:21px;
 
-            box-shadow:
-                0 2px 5px
-                rgba(0,0,0,0.25);
+    font-weight:bold;
 
-            position: relative;
+}
 
-            z-index: 1000;
-        }
 
+.header-subtitle{
 
-        .logo {
+    font-size:12px;
 
-            font-size: 34px;
+    margin-top:4px;
 
-            margin-right: 12px;
-        }
+    opacity:.9;
+}
 
 
-        .header-title {
+/* =====================================================
+   LAYOUT
+===================================================== */
 
-            font-size: 21px;
+#container{
 
-            font-weight: bold;
+    display:flex;
 
-            line-height: 1.2;
-        }
+    width:100%;
 
+    height:
+    calc(100vh - 64px);
+}
 
-        .header-subtitle {
 
-            font-size: 12px;
+/* =====================================================
+   SIDEBAR
+===================================================== */
 
-            margin-top: 4px;
+#sidebar{
 
-            opacity: 0.9;
-        }
+    width:350px;
 
+    min-width:350px;
 
-        /* =====================================================
-           LAYOUT
-        ====================================================== */
+    height:100%;
 
-        #container {
+    background:#f5f7f5;
 
-            display: flex;
+    border-right:
+    1px solid #ccc;
 
-            width: 100%;
+    overflow-y:auto;
 
-            height:
-                calc(100vh - 64px);
-        }
+    padding:14px;
+}
 
 
-        /* =====================================================
-           SIDEBAR
-        ====================================================== */
+.section{
 
-        #sidebar {
+    background:white;
 
-            width: 330px;
+    border:
+    1px solid #ddd;
 
-            min-width: 330px;
+    border-radius:7px;
 
-            height: 100%;
+    padding:12px;
 
-            background: #f5f7f5;
+    margin-bottom:12px;
 
-            border-right:
-                1px solid #cfd8cf;
+    box-shadow:
+    0 1px 3px
+    rgba(0,0,0,.08);
+}
 
-            overflow-y: auto;
 
-            padding: 15px;
-        }
+.section-title{
 
+    font-size:14px;
 
-        .section {
+    font-weight:bold;
 
-            background: white;
+    color:#1b5e20;
 
-            border:
-                1px solid #e0e0e0;
+    border-bottom:
+    2px solid #e8f5e9;
 
-            border-radius: 7px;
+    padding-bottom:7px;
 
-            padding: 12px;
+    margin-bottom:10px;
+}
 
-            margin-bottom: 12px;
 
-            box-shadow:
-                0 1px 3px
-                rgba(0,0,0,0.08);
-        }
+/* =====================================================
+   STATUS
+===================================================== */
 
+#status{
 
-        .section-title {
+    padding:8px;
 
-            font-size: 14px;
+    background:#fff8e1;
 
-            font-weight: bold;
+    color:#795548;
 
-            color: #1b5e20;
+    border-radius:5px;
 
-            border-bottom:
-                2px solid #e8f5e9;
+    font-size:12px;
 
-            padding-bottom: 7px;
+    margin-bottom:10px;
+}
 
-            margin-bottom: 10px;
-        }
 
+#status.success{
 
-        /* =====================================================
-           LAYER CHECKBOX
-        ====================================================== */
+    background:#e8f5e9;
 
-        .layer-item {
+    color:#2e7d32;
+}
 
-            display: flex;
 
-            align-items: center;
+#status.error{
 
-            gap: 8px;
+    background:#ffebee;
 
-            padding: 7px 5px;
+    color:#c62828;
+}
 
-            cursor: pointer;
 
-            border-radius: 5px;
-        }
+/* =====================================================
+   LAYER
+===================================================== */
 
+.layer-item{
 
-        .layer-item:hover {
+    display:flex;
 
-            background: #f1f8f2;
-        }
+    align-items:center;
 
+    gap:8px;
 
-        .layer-item input {
+    padding:7px;
 
-            width: 17px;
+    cursor:pointer;
+}
 
-            height: 17px;
 
-            cursor: pointer;
-        }
+.layer-item input{
 
+    width:17px;
 
-        /* =====================================================
-           SEARCH
-        ====================================================== */
+    height:17px;
+}
 
-        .search-label {
 
-            display: block;
+/* =====================================================
+   SEARCH
+===================================================== */
 
-            font-size: 12px;
+.search-label{
 
-            font-weight: bold;
+    display:block;
 
-            margin-bottom: 5px;
+    font-size:12px;
 
-            color: #555;
-        }
+    font-weight:bold;
 
+    margin-bottom:5px;
 
-        #searchInput {
+    color:#555;
+}
 
-            width: 100%;
 
-            padding: 10px;
+#searchInput{
 
-            border:
-                1px solid #bdbdbd;
+    width:100%;
 
-            border-radius: 5px;
+    padding:10px;
 
-            font-size: 14px;
+    border:
+    1px solid #bbb;
 
-            outline: none;
-        }
+    border-radius:5px;
 
+    font-size:14px;
 
-        #searchInput:focus {
+    outline:none;
+}
 
-            border-color: #2e7d32;
 
-            box-shadow:
-                0 0 0 2px
-                rgba(46,125,50,0.12);
-        }
+#searchInput:focus{
 
+    border-color:#2e7d32;
 
-        .button-row {
+    box-shadow:
+    0 0 0 2px
+    rgba(46,125,50,.12);
+}
 
-            display: flex;
 
-            gap: 7px;
+.button-row{
 
-            margin-top: 8px;
-        }
+    display:flex;
 
+    gap:7px;
 
-        .btn {
+    margin-top:8px;
+}
 
-            flex: 1;
 
-            padding: 9px 7px;
+.btn{
 
-            border: none;
+    flex:1;
 
-            border-radius: 5px;
+    padding:9px;
 
-            cursor: pointer;
+    border:none;
 
-            font-size: 13px;
+    border-radius:5px;
 
-            font-weight: bold;
-        }
+    cursor:pointer;
 
+    font-weight:bold;
 
-        .btn-primary {
+    font-size:13px;
+}
 
-            background: #2e7d32;
 
-            color: white;
-        }
+.btn-primary{
 
+    background:#2e7d32;
 
-        .btn-primary:hover {
+    color:white;
+}
 
-            background: #1b5e20;
-        }
 
+.btn-primary:hover{
 
-        .btn-secondary {
+    background:#1b5e20;
+}
 
-            background: #e0e0e0;
 
-            color: #333;
-        }
+.btn-secondary{
 
+    background:#e0e0e0;
 
-        .btn-secondary:hover {
+    color:#333;
+}
 
-            background: #d0d0d0;
-        }
 
+/* =====================================================
+   FILTER
+===================================================== */
 
-        /* =====================================================
-           STATISTICS
-        ====================================================== */
+.filter{
 
-        .stat-grid {
+    width:100%;
 
-            display: grid;
+    padding:8px;
 
-            grid-template-columns:
-                1fr 1fr;
+    margin-bottom:7px;
 
-            gap: 8px;
-        }
+    border:
+    1px solid #bbb;
 
+    border-radius:5px;
 
-        .stat-card {
+    background:white;
+}
 
-            background: #f5f9f5;
 
-            border:
-                1px solid #d9ead9;
+/* =====================================================
+   STATISTICS
+===================================================== */
 
-            border-radius: 6px;
+.stat-grid{
 
-            padding: 10px;
+    display:grid;
 
-            text-align: center;
-        }
+    grid-template-columns:
+    1fr 1fr;
 
+    gap:8px;
+}
 
-        .stat-value {
 
-            font-size: 20px;
+.stat-card{
 
-            font-weight: bold;
+    background:#f5f9f5;
 
-            color: #1b5e20;
-        }
+    border:
+    1px solid #d9ead9;
 
+    border-radius:6px;
 
-        .stat-label {
+    padding:10px;
 
-            font-size: 11px;
+    text-align:center;
+}
 
-            color: #666;
 
-            margin-top: 3px;
-        }
+.stat-value{
 
+    font-size:19px;
 
-        /* =====================================================
-           INFORMATION
-        ====================================================== */
+    font-weight:bold;
 
-        #infoContent {
+    color:#1b5e20;
+}
 
-            font-size: 13px;
 
-            line-height: 1.5;
-        }
+.stat-label{
 
+    font-size:11px;
 
-        .info-empty {
+    color:#666;
 
-            color: #777;
+    margin-top:3px;
+}
 
-            font-style: italic;
 
-            text-align: center;
+/* =====================================================
+   INFO
+===================================================== */
 
-            padding: 10px 0;
-        }
+#infoContent{
 
+    font-size:13px;
 
-        .info-table {
+    line-height:1.45;
+}
 
-            width: 100%;
 
-            border-collapse:
-                collapse;
-        }
+.info-empty{
 
+    color:#777;
 
-        .info-table tr {
+    font-style:italic;
 
-            border-bottom:
-                1px solid #eeeeee;
-        }
+    text-align:center;
 
+    padding:10px;
+}
 
-        .info-table td {
 
-            padding:
-                6px 3px;
+.info-table{
 
-            vertical-align:
-                top;
-        }
+    width:100%;
 
+    border-collapse:collapse;
+}
 
-        .info-key {
 
-            width: 42%;
+.info-table tr{
 
-            font-weight: bold;
+    border-bottom:
+    1px solid #eee;
+}
 
-            color: #444;
-        }
 
+.info-table td{
 
-        .info-value {
+    padding:6px 3px;
 
-            color: #222;
+    vertical-align:top;
+}
 
-            word-break:
-                break-word;
-        }
 
+.info-key{
 
-        /* =====================================================
-           STATUS
-        ====================================================== */
+    width:43%;
 
-        #status {
+    font-weight:bold;
 
-            font-size: 12px;
+    color:#444;
+}
 
-            padding: 8px;
 
-            border-radius: 5px;
+.info-value{
 
-            background: #fff8e1;
+    word-break:break-word;
+}
 
-            color: #795548;
 
-            margin-bottom: 10px;
-        }
+/* =====================================================
+   MAP
+===================================================== */
 
+#map{
 
-        #status.success {
+    flex:1;
 
-            background: #e8f5e9;
+    height:100%;
 
-            color: #2e7d32;
-        }
+    position:relative;
+}
 
 
-        #status.error {
+.map-title{
 
-            background: #ffebee;
+    position:absolute;
 
-            color: #c62828;
-        }
+    top:12px;
 
+    left:50%;
 
-        /* =====================================================
-           MAP
-        ====================================================== */
+    transform:
+    translateX(-50%);
 
-        #map {
+    z-index:500;
 
-            flex: 1;
+    background:
+    rgba(255,255,255,.93);
 
-            height: 100%;
+    padding:
+    8px 15px;
 
-            position: relative;
-        }
+    border-radius:5px;
 
+    box-shadow:
+    0 2px 7px
+    rgba(0,0,0,.25);
 
-        /* =====================================================
-           MAP TITLE
-        ====================================================== */
+    font-weight:bold;
 
-        .map-title {
+    color:#1b5e20;
 
-            position: absolute;
+    pointer-events:none;
+}
 
-            top: 12px;
 
-            left: 50%;
+/* =====================================================
+   POPUP
+===================================================== */
 
-            transform:
-                translateX(-50%);
+.popup-title{
 
-            z-index: 500;
+    color:#1b5e20;
 
-            background:
-                rgba(255,255,255,0.93);
+    font-size:16px;
 
-            padding:
-                8px 15px;
+    font-weight:bold;
 
-            border-radius: 5px;
+    margin-bottom:8px;
 
-            box-shadow:
-                0 2px 7px
-                rgba(0,0,0,0.25);
+    border-bottom:
+    2px solid #e8f5e9;
 
-            font-weight: bold;
+    padding-bottom:5px;
+}
 
-            color: #1b5e20;
 
-            pointer-events: none;
-        }
+.popup-row{
 
+    font-size:12px;
 
-        /* =====================================================
-           POPUP
-        ====================================================== */
+    margin-bottom:4px;
+}
 
-        .popup-title {
 
-            color: #1b5e20;
+.popup-key{
 
-            font-size: 16px;
+    font-weight:bold;
+}
 
-            font-weight: bold;
 
-            margin-bottom: 8px;
+/* =====================================================
+   LEGEND
+===================================================== */
 
-            border-bottom:
-                2px solid #e8f5e9;
+.legend{
 
-            padding-bottom: 5px;
-        }
+    background:white;
 
+    padding:10px;
 
-        .popup-row {
+    border-radius:5px;
 
-            margin-bottom: 4px;
+    box-shadow:
+    0 1px 5px
+    rgba(0,0,0,.3);
 
-            font-size: 12px;
-        }
+    font-size:12px;
+}
 
 
-        .popup-key {
+.legend-title{
 
-            font-weight: bold;
-        }
+    font-weight:bold;
 
+    margin-bottom:7px;
+}
 
-        /* =====================================================
-           LEAFLET CONTROL
-        ====================================================== */
 
-        .leaflet-control-layers {
+.legend-item{
 
-            font-size: 13px;
-        }
+    display:flex;
 
+    align-items:center;
 
-        /* =====================================================
-           MOBILE
-        ====================================================== */
+    margin:4px 0;
+}
 
-        @media
-        (max-width: 800px) {
 
-            #sidebar {
+.legend-color{
 
-                width: 270px;
+    width:22px;
 
-                min-width: 270px;
-            }
+    height:14px;
 
+    margin-right:6px;
 
-            .header-title {
+    border:1px solid #777;
+}
 
-                font-size: 16px;
-            }
 
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
-            .header-subtitle {
+@media(max-width:800px){
 
-                display: none;
-            }
-        }
+    #sidebar{
 
+        width:290px;
 
-        @media
-        (max-width: 600px) {
+        min-width:290px;
+    }
 
-            #sidebar {
+    .header-title{
 
-                position:
-                    absolute;
+        font-size:16px;
+    }
 
-                left: 0;
+    .header-subtitle{
 
-                top: 64px;
+        display:none;
+    }
 
-                z-index: 1000;
+}
 
-                height:
-                    calc(100vh - 64px);
-
-                width: 290px;
-
-                min-width: 290px;
-
-                transform:
-                    translateX(-100%);
-
-                transition:
-                    transform 0.3s;
-            }
-
-
-            #sidebar.open {
-
-                transform:
-                    translateX(0);
-            }
-
-
-            #map {
-
-                width: 100%;
-            }
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -659,9 +625,9 @@
 <body>
 
 
-<!-- =========================================================
+<!-- =====================================================
      HEADER
-========================================================== -->
+===================================================== -->
 
 <div id="header">
 
@@ -684,322 +650,410 @@
 </div>
 
 
-<!-- =========================================================
-     MAIN CONTAINER
-========================================================== -->
+<!-- =====================================================
+     CONTAINER
+===================================================== -->
 
 <div id="container">
 
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-    <aside id="sidebar">
+<div id="sidebar">
 
 
-        <!-- STATUS -->
+<!-- STATUS -->
 
-        <div id="status">
+<div id="status">
 
-            Đang tải dữ liệu...
+    Đang tải dữ liệu...
 
-        </div>
+</div>
 
 
-        <!-- =================================================
-             LỚP DỮ LIỆU
-        ================================================== -->
+<!-- =====================================================
+     LỚP BẢN ĐỒ
+===================================================== -->
 
-        <div class="section">
+<div class="section">
 
-            <div class="section-title">
-                🗺️ LỚP DỮ LIỆU
-            </div>
+<div class="section-title">
 
+    🗺️ LỚP BẢN ĐỒ
 
-            <label class="layer-item">
+</div>
 
-                <input
-                    type="checkbox"
-                    id="toggleLo"
-                    checked
-                >
 
-                <span>
-                    🌳 Lô cao su
-                </span>
+<label class="layer-item">
 
-            </label>
+<input
+    type="checkbox"
+    id="toggleLo"
+    checked
+>
 
-        </div>
+<span>
+    🌳 Lô cao su
+</span>
 
+</label>
 
-        <!-- =================================================
-             TRA CỨU
-        ================================================== -->
+</div>
 
-        <div class="section">
 
-            <div class="section-title">
-                🔍 TRA CỨU LÔ CAO SU
-            </div>
+<!-- =====================================================
+     TÌM KIẾM
+===================================================== -->
 
+<div class="section">
 
-            <label class="search-label">
-                Mã lô / thông tin thuộc tính
-            </label>
+<div class="section-title">
 
+    🔍 TÌM KIẾM
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Nhập mã lô..."
-            >
+</div>
 
 
-            <div class="button-row">
+<label class="search-label">
 
-                <button
-                    class="btn btn-primary"
-                    id="searchButton"
-                >
-                    🔍 Tìm kiếm
-                </button>
+    Mã lô / giống / năm trồng / đội
 
+</label>
 
-                <button
-                    class="btn btn-secondary"
-                    id="resetButton"
-                >
-                    ↺ Xóa
-                </button>
 
-            </div>
+<input
+    type="text"
+    id="searchInput"
+    placeholder="Ví dụ: KC0609/03 PB"
+>
 
-        </div>
 
+<div class="button-row">
 
-        <!-- =================================================
-             THỐNG KÊ
-        ================================================== -->
+<button
+    class="btn btn-primary"
+    onclick="searchLo()"
+>
 
-        <div class="section">
+    🔍 Tìm
 
-            <div class="section-title">
-                📊 THỐNG KÊ
-            </div>
+</button>
 
 
-            <div class="stat-grid">
+<button
+    class="btn btn-secondary"
+    onclick="resetMap()"
+>
 
+    ↺ Xóa
 
-                <div class="stat-card">
+</button>
 
-                    <div
-                        class="stat-value"
-                        id="totalLots"
-                    >
-                        -
-                    </div>
+</div>
 
-                    <div class="stat-label">
-                        Tổng số lô
-                    </div>
+</div>
 
-                </div>
 
+<!-- =====================================================
+     BỘ LỌC
+===================================================== -->
 
-                <div class="stat-card">
+<div class="section">
 
-                    <div
-                        class="stat-value"
-                        id="totalArea"
-                    >
-                        -
-                    </div>
+<div class="section-title">
 
-                    <div class="stat-label">
-                        Tổng diện tích
-                    </div>
+    🔎 BỘ LỌC
 
-                </div>
+</div>
 
 
-            </div>
+<label class="search-label">
+    Giống
+</label>
 
-        </div>
+<select
+    id="filterGiong"
+    class="filter"
+>
 
+<option value="">
+    -- Tất cả giống --
+</option>
 
-        <!-- =================================================
-             THÔNG TIN LÔ
-        ================================================== -->
+</select>
 
-        <div class="section">
 
-            <div class="section-title">
-                🌳 THÔNG TIN LÔ
-            </div>
+<label class="search-label">
+    Hiện trạng
+</label>
 
+<select
+    id="filterHienTrang"
+    class="filter"
+>
 
-            <div id="infoContent">
+<option value="">
+    -- Tất cả --
+</option>
 
-                <div class="info-empty">
+</select>
 
-                    Click vào một lô trên bản đồ
-                    để xem thông tin.
 
-                </div>
+<label class="search-label">
+    Năm trồng
+</label>
 
-            </div>
+<select
+    id="filterNamTrong"
+    class="filter"
+>
 
-        </div>
+<option value="">
+    -- Tất cả --
+</option>
 
+</select>
 
-    </aside>
 
+<button
+    class="btn btn-primary"
+    style="width:100%"
+    onclick="applyFilters()"
+>
 
-    <!-- =====================================================
-         MAP
-    ====================================================== -->
+    Áp dụng bộ lọc
 
-    <main id="map">
+</button>
 
-        <div class="map-title">
 
-            WEBGIS CAO SU
+<button
+    class="btn btn-secondary"
+    style="width:100%;margin-top:6px"
+    onclick="clearFilters()"
+>
 
-        </div>
+    Xóa bộ lọc
 
-    </main>
+</button>
+
+</div>
+
+
+<!-- =====================================================
+     THỐNG KÊ
+===================================================== -->
+
+<div class="section">
+
+<div class="section-title">
+
+    📊 THỐNG KÊ
+
+</div>
+
+
+<div class="stat-grid">
+
+
+<div class="stat-card">
+
+<div
+    class="stat-value"
+    id="totalLots"
+>
+    -
+</div>
+
+<div class="stat-label">
+
+    Số lô
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div
+    class="stat-value"
+    id="totalArea"
+>
+    -
+</div>
+
+<div class="stat-label">
+
+    Diện tích
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     THÔNG TIN
+===================================================== -->
+
+<div class="section">
+
+<div class="section-title">
+
+    🌳 THÔNG TIN LÔ
+
+</div>
+
+
+<div id="infoContent">
+
+<div class="info-empty">
+
+    Click vào một lô trên bản đồ
+
+</div>
+
+</div>
+
+</div>
 
 
 </div>
 
 
-<!-- =========================================================
-     LEAFLET JAVASCRIPT
-========================================================== -->
+<!-- =====================================================
+     MAP
+===================================================== -->
+
+<div id="map">
+
+<div class="map-title">
+
+    WEBGIS CAO SU
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     LEAFLET
+===================================================== -->
 
 <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
-
-<!-- =========================================================
-     APPLICATION JAVASCRIPT
-========================================================== -->
 
 <script>
 
 
-// ==========================================================
+// ========================================================
 // CẤU HÌNH
-// ==========================================================
+// ========================================================
 
-// Nếu file nằm cùng thư mục với index.html:
-const GEOJSON_URL = "lo.geojson";
-
-// Nếu sau này bạn chuyển vào thư mục data,
-// đổi thành:
-// const GEOJSON_URL = "data/lo.geojson";
+const GEOJSON_URL =
+    "lo.geojson";
 
 
-// ==========================================================
-// KHỞI TẠO BẢN ĐỒ
-// ==========================================================
+// ========================================================
+// KHỞI TẠO MAP
+// ========================================================
 
-const map = L.map("map", {
-
-    zoomControl: true,
-
-    preferCanvas: true
-
-}).setView(
-
-    [13.75, 108.0],
-
-    10
-
-);
+const map =
+    L.map("map")
+    .setView(
+        [13.75,108.0],
+        10
+    );
 
 
-// ==========================================================
-// BẢN ĐỒ NỀN - OPENSTREETMAP
-// ==========================================================
+// ========================================================
+// OPEN STREET MAP
+// ========================================================
 
-const osm = L.tileLayer(
+const osm =
+    L.tileLayer(
 
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
-    {
+        {
 
-        maxZoom: 20,
+            maxZoom:20,
 
-        attribution:
+            attribution:
             "&copy; OpenStreetMap contributors"
 
-    }
+        }
 
-);
+    );
 
 
-// ==========================================================
-// BẢN ĐỒ NỀN - ẢNH VỆ TINH ESRI
-// ==========================================================
+// ========================================================
+// ẢNH VỆ TINH ESRI
+// ========================================================
 
-const satellite = L.tileLayer(
+const satellite =
+    L.tileLayer(
 
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 
-    {
+        {
 
-        maxZoom: 20,
+            maxZoom:20,
 
-        attribution:
+            attribution:
             "Tiles &copy; Esri"
 
-    }
+        }
 
-);
+    );
 
 
 // Mặc định
 osm.addTo(map);
 
 
-// ==========================================================
-// BIẾN DỮ LIỆU
-// ==========================================================
+// ========================================================
+// BIẾN
+// ========================================================
 
 let loLayer = null;
 
 let allFeatures = [];
 
+let filteredLayer = null;
+
 let selectedLayer = null;
 
 
-// ==========================================================
+// ========================================================
 // DOM
-// ==========================================================
+// ========================================================
 
 const statusBox =
     document.getElementById(
         "status"
     );
 
-
 const infoContent =
     document.getElementById(
         "infoContent"
     );
 
-
 const totalLots =
     document.getElementById(
         "totalLots"
     );
-
 
 const totalArea =
     document.getElementById(
@@ -1007,34 +1061,22 @@ const totalArea =
     );
 
 
-const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
-
-
-const toggleLo =
-    document.getElementById(
-        "toggleLo"
-    );
-
-
-// ==========================================================
-// HIỂN THỊ TRẠNG THÁI
-// ==========================================================
+// ========================================================
+// STATUS
+// ========================================================
 
 function setStatus(
-    message,
-    type = ""
-) {
+    text,
+    type=""
+){
 
     statusBox.textContent =
-        message;
+        text;
 
     statusBox.className =
         "";
 
-    if (type) {
+    if(type){
 
         statusBox.classList.add(
             type
@@ -1045,124 +1087,91 @@ function setStatus(
 }
 
 
-// ==========================================================
+// ========================================================
 // ESCAPE HTML
-// Bảo vệ khi đưa thuộc tính GeoJSON lên HTML
-// ==========================================================
+// ========================================================
 
-function escapeHtml(value) {
+function escapeHtml(value){
 
     return String(value)
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+        .replace(/&/g,"&amp;")
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+        .replace(/</g,"&lt;")
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+        .replace(/>/g,"&gt;")
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+        .replace(/"/g,"&quot;")
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/'/g,"&#039;");
 
 }
 
 
-// ==========================================================
-// FORMAT SỐ
-// ==========================================================
+// ========================================================
+// FORMAT NUMBER
+// ========================================================
 
 function formatNumber(
     value,
-    decimals = 2
-) {
+    decimals=2
+){
 
-    const number =
+    const n =
         Number(value);
 
-    if (
-        !Number.isFinite(number)
-    ) {
+    if(
+        !Number.isFinite(n)
+    ){
 
         return value;
 
     }
 
-
-    return number.toLocaleString(
+    return n.toLocaleString(
         "vi-VN",
         {
+
             minimumFractionDigits:
                 decimals,
 
             maximumFractionDigits:
                 decimals
+
         }
     );
 
 }
 
 
-// ==========================================================
-// XÁC ĐỊNH TRƯỜNG DIỆN TÍCH
-// Hỗ trợ nhiều tên trường phổ biến
-// ==========================================================
+// ========================================================
+// TÌM TRƯỜNG DIỆN TÍCH
+// ========================================================
 
 function findAreaField(
     properties
-) {
-
-    const keys =
-        Object.keys(properties);
-
+){
 
     const candidates = [
 
-        "DienTich",
-        "DIENTICH",
-        "dien_tich",
-        "DIEN_TICH",
-        "Area",
-        "AREA",
-        "area",
-        "DT",
-        "D_TICH",
-        "SHAPE_AREA"
+        "DT_2024",
+        "DT_bando",
+        "DT_2023"
 
     ];
 
 
-    for (
-        const candidate
+    for(
+        const field
         of candidates
-    ) {
+    ){
 
-        const exact =
-            keys.find(
-                key =>
-                    key.toLowerCase()
-                    ===
-                    candidate.toLowerCase()
-            );
+        if(
+            properties[field] !==
+            undefined
+        ){
 
-
-        if (exact) {
-
-            return exact;
+            return field;
 
         }
 
@@ -1174,64 +1183,51 @@ function findAreaField(
 }
 
 
-// ==========================================================
+// ========================================================
 // TÍNH THỐNG KÊ
-// ==========================================================
+// ========================================================
 
-function calculateStatistics(
+function updateStatistics(
     features
-) {
-
-    const count =
-        features.length;
-
+){
 
     totalLots.textContent =
-        count.toLocaleString(
+        features.length
+        .toLocaleString(
             "vi-VN"
         );
 
 
     let area = 0;
 
-    let areaFound = false;
-
 
     features.forEach(
         feature => {
 
-            const properties =
-                feature.properties || {};
+            const p =
+                feature.properties ||
+                {};
 
 
-            const areaField =
-                findAreaField(
-                    properties
-                );
+            const field =
+                findAreaField(p);
 
 
-            if (!areaField) {
+            if(field){
 
-                return;
-
-            }
-
-
-            const value =
-                Number(
-                    properties[
-                        areaField
-                    ]
-                );
+                const value =
+                    Number(
+                        p[field]
+                    );
 
 
-            if (
-                Number.isFinite(value)
-            ) {
+                if(
+                    Number.isFinite(value)
+                ){
 
-                area += value;
+                    area += value;
 
-                areaFound = true;
+                }
 
             }
 
@@ -1239,189 +1235,385 @@ function calculateStatistics(
     );
 
 
-    if (areaFound) {
-
-        totalArea.textContent =
-            formatNumber(
-                area,
-                2
-            ) + " ha";
-
-    } else {
-
-        totalArea.textContent =
-            "N/A";
-
-    }
+    totalArea.textContent =
+        formatNumber(
+            area,
+            2
+        ) + " ha";
 
 }
 
 
-// ==========================================================
-// STYLE LÔ CAO SU
-// ==========================================================
+// ========================================================
+// STYLE LÔ
+// ========================================================
 
-function loStyle(
-    feature
-) {
+function styleLo(){
 
     return {
 
-        color: "#176b2c",
+        color:"#176b2c",
 
-        weight: 1,
+        weight:1,
 
-        opacity: 1,
+        fillColor:"#66bb6a",
 
-        fillColor: "#66bb6a",
-
-        fillOpacity: 0.55
+        fillOpacity:.55
 
     };
 
 }
 
 
-// ==========================================================
-// STYLE KHI HOVER
-// ==========================================================
+// ========================================================
+// HIGHLIGHT
+// ========================================================
 
-function highlightFeature(
-    event
-) {
+function highlightFeature(e){
 
-    const layer =
-        event.target;
+    e.target.setStyle({
 
+        weight:3,
 
-    layer.setStyle({
+        color:"#ff0000",
 
-        weight: 3,
+        fillColor:"#81c784",
 
-        color: "#ff0000",
-
-        fillColor: "#81c784",
-
-        fillOpacity: 0.75
+        fillOpacity:.8
 
     });
 
+}
 
-    if (
-        !L.Browser.ie &&
-        !L.Browser.opera &&
-        !L.Browser.edge
-    ) {
 
-        layer.bringToFront();
+// ========================================================
+// RESET HIGHLIGHT
+// ========================================================
+
+function resetHighlight(e){
+
+    if(
+        loLayer
+    ){
+
+        loLayer.resetStyle(
+            e.target
+        );
 
     }
 
 }
 
 
-// ==========================================================
-// RESET STYLE
-// ==========================================================
-
-function resetHighlight(
-    event
-) {
-
-    if (
-        !loLayer
-    ) {
-
-        return;
-
-    }
-
-
-    loLayer.resetStyle(
-        event.target
-    );
-
-}
-
-
-// ==========================================================
-// HIỂN THỊ THÔNG TIN
-// ==========================================================
+// ========================================================
+// HIỂN THỊ THÔNG TIN LÔ
+// ========================================================
 
 function showInfo(
-    properties
-) {
+    p
+){
 
-    if (
-        !properties
-    ) {
-
-        infoContent.innerHTML = `
-
-            <div class="info-empty">
-
-                Không có dữ liệu thuộc tính.
-
-            </div>
-
-        `;
+    if(!p){
 
         return;
+
+    }
+
+
+    const namTrong =
+        parseInt(
+            p.Nam_trong
+        );
+
+
+    let tuoi = "";
+
+
+    if(
+        namTrong >= 1900
+    ){
+
+        tuoi =
+            new Date()
+            .getFullYear()
+            - namTrong;
 
     }
 
 
     let html = `
 
-        <table class="info-table">
-
-    `;
+<table class="info-table">
 
 
-    Object.entries(
-        properties
-    ).forEach(
-        ([key, value]) => {
+<tr>
+<td class="info-key">
+Mã lô mới
+</td>
 
-            if (
-                value === null ||
-                value === undefined
-            ) {
-
-                value = "";
-
-            }
+<td class="info-value">
+${escapeHtml(p.Tenlo_moi || "")}
+</td>
+</tr>
 
 
-            html += `
+<tr>
+<td class="info-key">
+Mã lô cũ
+</td>
 
-                <tr>
-
-                    <td class="info-key">
-
-                        ${escapeHtml(key)}
-
-                    </td>
-
-                    <td class="info-value">
-
-                        ${escapeHtml(value)}
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
+<td>
+${escapeHtml(p.Tenlo_cu || "")}
+</td>
+</tr>
 
 
-    html += `
+<tr>
+<td class="info-key">
+Vùng
+</td>
 
-        </table>
+<td>
+${escapeHtml(p.Vung || "")}
+</td>
+</tr>
 
-    `;
+
+<tr>
+<td class="info-key">
+Khu vực
+</td>
+
+<td>
+${escapeHtml(p.Khu_vuc || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Công ty
+</td>
+
+<td>
+${escapeHtml(p.Congty || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Đơn vị
+</td>
+
+<td>
+${escapeHtml(p.NT_doi || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Năm trồng
+</td>
+
+<td>
+${escapeHtml(p.Nam_trong || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Tuổi cây
+</td>
+
+<td>
+${tuoi ? tuoi + " năm" : ""}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Giống
+</td>
+
+<td>
+${escapeHtml(p.Giong || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Hạng đất
+</td>
+
+<td>
+${escapeHtml(p.Hang_dat || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Cao trình
+</td>
+
+<td>
+${formatNumber(p.Caotrinh,0)} m
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Khoảng cách
+</td>
+
+<td>
+${escapeHtml(p.KC || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Mật độ
+</td>
+
+<td>
+${escapeHtml(p.Mat_do || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Mật độ cạo
+</td>
+
+<td>
+${formatNumber(p.Matdo_CC,0)}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Diện tích bản đồ
+</td>
+
+<td>
+${formatNumber(p.DT_bando,2)}
+ ha
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Diện tích 2024
+</td>
+
+<td>
+${formatNumber(p.DT_2024,2)}
+ ha
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Hiện trạng
+</td>
+
+<td>
+${escapeHtml(p.Hien_trang || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Phân loại vườn cây
+</td>
+
+<td>
+${escapeHtml(p.Phanloai_VC || "")}
+</td>
+</tr>
+
+
+<tr>
+<td class="info-key">
+Loại vườn
+</td>
+
+<td>
+${escapeHtml(p.HT_Loaivuon || "")}
+</td>
+</tr>
+
+
+</table>
+
+
+<hr>
+
+
+<b>📈 NĂNG SUẤT (kg/ha)</b>
+
+
+<table class="info-table">
+
+
+<tr>
+<td>2017</td>
+<td>${formatNumber(p.NS_2017,2)}</td>
+</tr>
+
+
+<tr>
+<td>2018</td>
+<td>${formatNumber(p.NS_2018,2)}</td>
+</tr>
+
+
+<tr>
+<td>2019</td>
+<td>${formatNumber(p.NS_2019,2)}</td>
+</tr>
+
+
+<tr>
+<td>2020</td>
+<td>${formatNumber(p.NS_2020,2)}</td>
+</tr>
+
+
+<tr>
+<td>2021</td>
+<td>${formatNumber(p.NS_2021,2)}</td>
+</tr>
+
+
+<tr>
+<td>2022</td>
+<td>${formatNumber(p.NS_2022,2)}</td>
+</tr>
+
+
+<tr>
+<td>2023</td>
+<td>${formatNumber(p.NS_2023,2)}</td>
+</tr>
+
+
+</table>
+
+`;
 
 
     infoContent.innerHTML =
@@ -1430,99 +1622,111 @@ function showInfo(
 }
 
 
-// ==========================================================
-// TẠO POPUP
-// ==========================================================
+// ========================================================
+// POPUP
+// ========================================================
 
 function createPopup(
-    properties
-) {
+    p
+){
 
-    let html = `
+    return `
 
-        <div class="popup-title">
+<div class="popup-title">
 
-            🌳 THÔNG TIN LÔ CAO SU
+🌳 ${escapeHtml(
+    p.Tenlo_moi ||
+    p.Tenlo_cu ||
+    "Lô cao su"
+)}
 
-        </div>
-
-    `;
-
-
-    if (
-        !properties ||
-        Object.keys(properties).length === 0
-    ) {
-
-        return html +
-            "<div>Không có dữ liệu thuộc tính.</div>";
-
-    }
+</div>
 
 
-    Object.entries(
-        properties
-    ).forEach(
-        ([key, value]) => {
+<div class="popup-row">
 
-            if (
-                value === null ||
-                value === undefined
-            ) {
+<b>Giống:</b>
 
-                value = "";
+${escapeHtml(
+    p.Giong || ""
+)}
 
-            }
+</div>
 
 
-            html += `
+<div class="popup-row">
 
-                <div class="popup-row">
+<b>Năm trồng:</b>
 
-                    <span class="popup-key">
+${escapeHtml(
+    p.Nam_trong || ""
+)}
 
-                        ${escapeHtml(key)}
-
-                    </span>
-
-                    :
-
-                    ${escapeHtml(value)}
-
-                </div>
-
-            `;
-
-        }
-    );
+</div>
 
 
-    return html;
+<div class="popup-row">
+
+<b>Diện tích:</b>
+
+${formatNumber(
+    p.DT_2024 ||
+    p.DT_bando,
+    2
+)} ha
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Hiện trạng:</b>
+
+${escapeHtml(
+    p.Hien_trang || ""
+)}
+
+</div>
+
+
+<div class="popup-row">
+
+<b>Năng suất 2023:</b>
+
+${formatNumber(
+    p.NS_2023,
+    2
+)} kg/ha
+
+</div>
+
+`;
 
 }
 
 
-// ==========================================================
-// XỬ LÝ TỪNG LÔ
-// ==========================================================
+// ========================================================
+// XỬ LÝ FEATURE
+// ========================================================
 
 function onEachFeature(
     feature,
     layer
-) {
+){
 
-    const properties =
-        feature.properties || {};
+    const p =
+        feature.properties ||
+        {};
 
 
-    // Popup
     layer.bindPopup(
-        createPopup(
-            properties
-        ),
+
+        createPopup(p),
+
         {
-            maxWidth: 350
+            maxWidth:350
         }
+
     );
 
 
@@ -1531,19 +1735,15 @@ function onEachFeature(
         mouseover:
             highlightFeature,
 
-
         mouseout:
             resetHighlight,
 
-
         click:
-            function() {
+            function(){
 
-                // Nếu đang chọn lô khác
-                if (
-                    selectedLayer &&
-                    selectedLayer !== layer
-                ) {
+                if(
+                    selectedLayer
+                ){
 
                     loLayer.resetStyle(
                         selectedLayer
@@ -1558,22 +1758,18 @@ function onEachFeature(
 
                 layer.setStyle({
 
-                    weight: 4,
+                    weight:4,
 
-                    color: "#d32f2f",
+                    color:"#d32f2f",
 
-                    fillColor:
-                        "#ffb74d",
+                    fillColor:"#ffb74d",
 
-                    fillOpacity: 0.8
+                    fillOpacity:.85
 
                 });
 
 
-                showInfo(
-                    properties
-                );
-
+                showInfo(p);
 
                 layer.openPopup();
 
@@ -1584,16 +1780,16 @@ function onEachFeature(
 }
 
 
-// ==========================================================
+// ========================================================
 // TẢI GEOJSON
-// ==========================================================
+// ========================================================
 
-async function loadGeoJSON() {
+async function loadGeoJSON(){
 
-    try {
+    try{
 
         setStatus(
-            "Đang tải dữ liệu lô cao su..."
+            "Đang tải dữ liệu lô..."
         );
 
 
@@ -1603,17 +1799,12 @@ async function loadGeoJSON() {
             );
 
 
-        if (
+        if(
             !response.ok
-        ) {
+        ){
 
             throw new Error(
-
-                "Không tìm thấy file " +
-                GEOJSON_URL +
-                ". Mã lỗi: " +
-                response.status
-
+                "Không tìm thấy lo.geojson"
             );
 
         }
@@ -1623,16 +1814,12 @@ async function loadGeoJSON() {
             await response.json();
 
 
-        // Kiểm tra GeoJSON
-        if (
-            !data.features ||
-            !Array.isArray(
-                data.features
-            )
-        ) {
+        if(
+            !data.features
+        ){
 
             throw new Error(
-                "File không phải GeoJSON FeatureCollection hợp lệ."
+                "GeoJSON không hợp lệ"
             );
 
         }
@@ -1642,7 +1829,6 @@ async function loadGeoJSON() {
             data.features;
 
 
-        // Tạo lớp
         loLayer =
             L.geoJSON(
 
@@ -1651,54 +1837,47 @@ async function loadGeoJSON() {
                 {
 
                     style:
-                        loStyle,
+                        styleLo,
 
                     onEachFeature:
                         onEachFeature
 
                 }
 
-            );
+            ).addTo(map);
 
 
-        // Hiển thị
-        loLayer.addTo(
-            map
-        );
-
-
-        // Zoom
         const bounds =
             loLayer.getBounds();
 
 
-        if (
+        if(
             bounds.isValid()
-        ) {
+        ){
 
             map.fitBounds(
                 bounds,
                 {
-                    padding:
-                        [20, 20]
+                    padding:[20,20]
                 }
             );
 
         }
 
 
-        // Thống kê
-        calculateStatistics(
+        updateStatistics(
             allFeatures
         );
 
 
-        // Layer control
+        populateFilters();
+
+
         L.control.layers(
 
             {
 
-                "🗺️ OpenStreetMap":
+                "🗺️ Bản đồ đường":
                     osm,
 
                 "🛰️ Ảnh vệ tinh":
@@ -1715,145 +1894,439 @@ async function loadGeoJSON() {
 
             {
 
-                collapsed:
-                    false
+                collapsed:false
 
             }
 
         ).addTo(map);
 
 
-        // Trạng thái
+        addLegend();
+
+
         setStatus(
 
             "Đã tải " +
-            allFeatures.length.toLocaleString(
-                "vi-VN"
-            ) +
+            allFeatures.length +
             " lô cao su.",
 
             "success"
 
         );
 
-
     }
 
-    catch (
-        error
-    ) {
 
-        console.error(
-            error
-        );
+    catch(error){
+
+        console.error(error);
 
 
         setStatus(
-            "Lỗi tải dữ liệu GeoJSON.",
+            "Lỗi tải GeoJSON",
             "error"
         );
 
 
         infoContent.innerHTML = `
 
-            <div style="color:#c62828">
+<div style="color:#c62828">
 
-                <b>
-                    Không thể tải dữ liệu.
-                </b>
+<b>
+Không tải được lo.geojson
+</b>
 
-                <br><br>
+<br><br>
 
-                File cần có tên:
+Kiểm tra file:
 
-                <br>
+<br>
 
-                <b>lo.geojson</b>
+<b>
+lo.geojson
+</b>
 
-                <br><br>
+<br><br>
 
-                và nằm cùng thư mục
-                với index.html.
+và bảo đảm file nằm cùng thư mục
+với index.html.
 
-                <br><br>
+<br><br>
 
-                Chi tiết:
+${escapeHtml(
+    error.message
+)}
 
-                <br>
+</div>
 
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
+`;
 
     }
 
 }
 
 
-// ==========================================================
-// BẬT / TẮT LỚP
-// ==========================================================
+// ========================================================
+// TẠO BỘ LỌC
+// ========================================================
 
-toggleLo.addEventListener(
+function populateFilters(){
 
-    "change",
+    const giongSet =
+        new Set();
 
-    function() {
+    const hienTrangSet =
+        new Set();
 
-        if (
-            !loLayer
-        ) {
+    const namSet =
+        new Set();
 
-            return;
+
+    allFeatures.forEach(
+        feature => {
+
+            const p =
+                feature.properties ||
+                {};
+
+
+            if(
+                p.Giong
+            ){
+
+                giongSet.add(
+                    p.Giong
+                );
+
+            }
+
+
+            if(
+                p.Hien_trang
+            ){
+
+                hienTrangSet.add(
+                    p.Hien_trang
+                );
+
+            }
+
+
+            if(
+                p.Nam_trong
+            ){
+
+                namSet.add(
+                    p.Nam_trong
+                );
+
+            }
 
         }
+    );
 
 
-        if (
-            this.checked
-        ) {
+    fillSelect(
+        "filterGiong",
+        [...giongSet].sort()
+    );
 
-            loLayer.addTo(
-                map
+
+    fillSelect(
+        "filterHienTrang",
+        [...hienTrangSet].sort()
+    );
+
+
+    fillSelect(
+        "filterNamTrong",
+        [...namSet].sort()
+    );
+
+}
+
+
+// ========================================================
+// FILL SELECT
+// ========================================================
+
+function fillSelect(
+    id,
+    values
+){
+
+    const select =
+        document.getElementById(
+            id
+        );
+
+
+    values.forEach(
+        value => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                value;
+
+
+            option.textContent =
+                value;
+
+
+            select.appendChild(
+                option
             );
 
         }
+    );
 
-        else {
+}
 
-            map.removeLayer(
-                loLayer
+
+// ========================================================
+// ÁP DỤNG BỘ LỌC
+// ========================================================
+
+function applyFilters(){
+
+    const giong =
+        document.getElementById(
+            "filterGiong"
+        ).value;
+
+
+    const hienTrang =
+        document.getElementById(
+            "filterHienTrang"
+        ).value;
+
+
+    const namTrong =
+        document.getElementById(
+            "filterNamTrong"
+        ).value;
+
+
+    const result =
+        allFeatures.filter(
+            feature => {
+
+                const p =
+                    feature.properties ||
+                    {};
+
+
+                const okGiong =
+                    !giong ||
+                    p.Giong ===
+                    giong;
+
+
+                const okHienTrang =
+                    !hienTrang ||
+                    p.Hien_trang ===
+                    hienTrang;
+
+
+                const okNam =
+                    !namTrong ||
+                    String(
+                        p.Nam_trong
+                    ) ===
+                    String(
+                        namTrong
+                    );
+
+
+                return (
+                    okGiong &&
+                    okHienTrang &&
+                    okNam
+                );
+
+            }
+        );
+
+
+    // Xóa lớp cũ
+    if(
+        filteredLayer
+    ){
+
+        map.removeLayer(
+            filteredLayer
+        );
+
+    }
+
+
+    filteredLayer =
+        L.geoJSON(
+
+            {
+
+                type:
+                    "FeatureCollection",
+
+                features:
+                    result
+
+            },
+
+            {
+
+                style:
+                    styleLo,
+
+                onEachFeature:
+                    onEachFeature
+
+            }
+
+        ).addTo(map);
+
+
+    updateStatistics(
+        result
+    );
+
+
+    if(
+        result.length > 0
+    ){
+
+        const bounds =
+            filteredLayer.getBounds();
+
+
+        if(
+            bounds.isValid()
+        ){
+
+            map.fitBounds(
+                bounds,
+                {
+                    padding:[20,20]
+                }
             );
 
         }
 
     }
 
-);
+
+    setStatus(
+
+        "Đang hiển thị " +
+        result.length +
+        " lô.",
+
+        "success"
+
+    );
+
+}
 
 
-// ==========================================================
+// ========================================================
+// XÓA BỘ LỌC
+// ========================================================
+
+function clearFilters(){
+
+    document.getElementById(
+        "filterGiong"
+    ).value = "";
+
+
+    document.getElementById(
+        "filterHienTrang"
+    ).value = "";
+
+
+    document.getElementById(
+        "filterNamTrong"
+    ).value = "";
+
+
+    if(
+        filteredLayer
+    ){
+
+        map.removeLayer(
+            filteredLayer
+        );
+
+        filteredLayer =
+            null;
+
+    }
+
+
+    if(
+        loLayer
+    ){
+
+        if(
+            !map.hasLayer(
+                loLayer
+            )
+        ){
+
+            loLayer.addTo(map);
+
+        }
+
+
+        map.fitBounds(
+            loLayer.getBounds()
+        );
+
+
+        updateStatistics(
+            allFeatures
+        );
+
+    }
+
+
+    setStatus(
+
+        "Đang hiển thị toàn bộ dữ liệu.",
+
+        "success"
+
+    );
+
+}
+
+
+// ========================================================
 // TÌM KIẾM
-// ==========================================================
+// ========================================================
 
-function searchLo() {
+function searchLo(){
 
     const keyword =
-        searchInput.value
+        document.getElementById(
+            "searchInput"
+        )
+        .value
         .trim()
         .toLowerCase();
 
 
-    if (
+    if(
         !keyword
-    ) {
+    ){
 
         alert(
-            "Vui lòng nhập mã lô hoặc thông tin cần tìm."
+            "Vui lòng nhập thông tin cần tìm."
         );
 
         return;
@@ -1861,56 +2334,54 @@ function searchLo() {
     }
 
 
-    if (
-        allFeatures.length === 0
-    ) {
-
-        alert(
-            "Dữ liệu lô chưa được tải."
-        );
-
-        return;
-
-    }
-
-
-    let foundFeature =
+    let found =
         null;
 
 
-    // ======================================================
-    // Tìm chính xác trước
-    // ======================================================
+    // Ưu tiên các trường quan trọng
+    const priorityFields = [
 
-    for (
+        "Tenlo_moi",
+        "Tenlo_cu",
+        "Giong",
+        "NT_doi",
+        "Hien_trang",
+        "Nam_trong"
+
+    ];
+
+
+    // Tìm ưu tiên
+    for(
         const feature
         of allFeatures
-    ) {
+    ){
 
-        const properties =
-            feature.properties || {};
+        const p =
+            feature.properties ||
+            {};
 
 
-        for (
-            const key
-            of Object.keys(
-                properties
-            )
-        ) {
+        for(
+            const field
+            of priorityFields
+        ){
 
             const value =
                 String(
-                    properties[key] ?? ""
+                    p[field] ??
+                    ""
                 )
-                .trim()
                 .toLowerCase();
 
 
-            if (
-                value === keyword
-            ) {
+            if(
+                value.includes(
+                    keyword
+                )
+            ){
 
-                foundFeature =
+                found =
                     feature;
 
                 break;
@@ -1920,68 +2391,48 @@ function searchLo() {
         }
 
 
-        if (
-            foundFeature
-        ) {
-
+        if(found)
             break;
-
-        }
 
     }
 
 
-    // ======================================================
-    // Nếu không có kết quả chính xác
-    // tìm gần đúng
-    // ======================================================
+    // Nếu không thấy,
+    // tìm toàn bộ thuộc tính
+    if(!found){
 
-    if (
-        !foundFeature
-    ) {
-
-        for (
+        for(
             const feature
             of allFeatures
-        ) {
+        ){
 
-            const properties =
-                feature.properties || {};
-
-
-            for (
-                const key
-                of Object.keys(
-                    properties
-                )
-            ) {
-
-                const value =
-                    String(
-                        properties[key] ?? ""
-                    )
-                    .toLowerCase();
+            const p =
+                feature.properties ||
+                {};
 
 
-                if (
-                    value.includes(
-                        keyword
-                    )
-                ) {
-
-                    foundFeature =
-                        feature;
-
-                    break;
-
-                }
-
-            }
+            const values =
+                Object.values(p);
 
 
-            if (
-                foundFeature
-            ) {
+            const match =
+                values.some(
+                    value =>
+                        String(
+                            value ??
+                            ""
+                        )
+                        .toLowerCase()
+                        .includes(
+                            keyword
+                        )
+                );
+
+
+            if(match){
+
+                found =
+                    feature;
 
                 break;
 
@@ -1992,16 +2443,10 @@ function searchLo() {
     }
 
 
-    // ======================================================
-    // Không tìm thấy
-    // ======================================================
-
-    if (
-        !foundFeature
-    ) {
+    if(!found){
 
         alert(
-            "Không tìm thấy dữ liệu phù hợp."
+            "Không tìm thấy lô hoặc thông tin phù hợp."
         );
 
         return;
@@ -2009,23 +2454,19 @@ function searchLo() {
     }
 
 
-    // ======================================================
-    // Tạo lớp tạm để lấy bounds
-    // ======================================================
-
-    const tempLayer =
+    const temp =
         L.geoJSON(
-            foundFeature
+            found
         );
 
 
     const bounds =
-        tempLayer.getBounds();
+        temp.getBounds();
 
 
-    if (
+    if(
         bounds.isValid()
-    ) {
+    ){
 
         map.fitBounds(
 
@@ -2033,10 +2474,10 @@ function searchLo() {
 
             {
 
-                maxZoom: 18,
+                maxZoom:18,
 
                 padding:
-                    [40, 40]
+                    [40,40]
 
             }
 
@@ -2045,25 +2486,22 @@ function searchLo() {
     }
 
 
-    // ======================================================
-    // Tìm layer tương ứng trong GeoJSON
-    // ======================================================
-
-    if (
+    // tìm layer tương ứng
+    if(
         loLayer
-    ) {
+    ){
 
         loLayer.eachLayer(
-            function(layer) {
+            layer => {
 
-                if (
+                if(
                     layer.feature ===
-                    foundFeature
-                ) {
+                    found
+                ){
 
-                    if (
+                    if(
                         selectedLayer
-                    ) {
+                    ){
 
                         loLayer.resetStyle(
                             selectedLayer
@@ -2078,15 +2516,13 @@ function searchLo() {
 
                     layer.setStyle({
 
-                        weight: 4,
+                        weight:4,
 
-                        color: "#d32f2f",
+                        color:"#d32f2f",
 
-                        fillColor:
-                            "#ffb74d",
+                        fillColor:"#ffb74d",
 
-                        fillOpacity:
-                            0.85
+                        fillOpacity:.85
 
                     });
 
@@ -2095,7 +2531,7 @@ function searchLo() {
 
 
                     showInfo(
-                        foundFeature.properties
+                        found.properties
                     );
 
                 }
@@ -2105,23 +2541,41 @@ function searchLo() {
 
     }
 
+
+    setStatus(
+
+        "Đã tìm thấy: " +
+        (
+            found.properties.Tenlo_moi ||
+            found.properties.Tenlo_cu ||
+            "Lô"
+        ),
+
+        "success"
+
+    );
+
 }
 
 
-// ==========================================================
-// RESET TÌM KIẾM
-// ==========================================================
+// ========================================================
+// RESET BẢN ĐỒ
+// ========================================================
 
-function resetMap() {
+function resetMap(){
 
-    searchInput.value =
-        "";
+    document.getElementById(
+        "searchInput"
+    ).value = "";
 
 
-    if (
+    clearFilters();
+
+
+    if(
         selectedLayer &&
         loLayer
-    ) {
+    ){
 
         loLayer.resetStyle(
             selectedLayer
@@ -2134,102 +2588,121 @@ function resetMap() {
         null;
 
 
-    if (
-        loLayer
-    ) {
-
-        const bounds =
-            loLayer.getBounds();
-
-
-        if (
-            bounds.isValid()
-        ) {
-
-            map.fitBounds(
-                bounds,
-                {
-                    padding:
-                        [20, 20]
-                }
-            );
-
-        }
-
-    }
-
-
     infoContent.innerHTML = `
 
-        <div class="info-empty">
+<div class="info-empty">
 
-            Click vào một lô trên bản đồ
-            để xem thông tin.
+Click vào một lô trên bản đồ
+để xem thông tin.
 
-        </div>
+</div>
 
-    `;
+`;
 
 }
 
 
-// ==========================================================
-// SỰ KIỆN NÚT
-// ==========================================================
-
-document
-    .getElementById(
-        "searchButton"
-    )
-    .addEventListener(
-        "click",
-        searchLo
-    );
-
-
-document
-    .getElementById(
-        "resetButton"
-    )
-    .addEventListener(
-        "click",
-        resetMap
-    );
-
-
-// ==========================================================
+// ========================================================
 // ENTER ĐỂ TÌM KIẾM
-// ==========================================================
+// ========================================================
 
-searchInput.addEventListener(
-
+document
+.getElementById(
+    "searchInput"
+)
+.addEventListener(
     "keydown",
+    function(event){
 
-    function(event) {
-
-        if (
+        if(
             event.key ===
             "Enter"
-        ) {
+        ){
 
             searchLo();
 
         }
 
     }
-
 );
 
 
-// ==========================================================
-// CHẠY ỨNG DỤNG
-// ==========================================================
+// ========================================================
+// LEGEND
+// ========================================================
+
+function addLegend(){
+
+    const legend =
+        L.control({
+            position:
+                "bottomright"
+        });
+
+
+    legend.onAdd =
+        function(){
+
+            const div =
+                L.DomUtil.create(
+                    "div",
+                    "legend"
+                );
+
+
+            div.innerHTML = `
+
+<div class="legend-title">
+    CHÚ GIẢI
+</div>
+
+<div class="legend-item">
+
+<div
+class="legend-color"
+style="
+background:#66bb6a;
+opacity:.55;
+">
+</div>
+
+Lô cao su
+
+</div>
+
+<div class="legend-item">
+
+<div
+class="legend-color"
+style="
+background:#ffb74d;
+">
+</div>
+
+Lô đang chọn
+
+</div>
+
+`;
+
+            return div;
+
+        };
+
+
+    legend.addTo(map);
+
+}
+
+
+// ========================================================
+// CHẠY
+// ========================================================
 
 loadGeoJSON();
 
 
 </script>
-
 
 </body>
 
