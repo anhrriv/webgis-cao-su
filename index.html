@@ -10,48 +10,182 @@
 
     <title>WebGIS Quản lý vườn cao su</title>
 
-    <!-- Leaflet -->
+    <!-- Leaflet CSS -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    >
 
-    <!-- CSS của chúng ta -->
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    />
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #header {
+
+            height: 60px;
+
+            background: #1b5e20;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 20px;
+
+        }
+
+        #header h1 {
+
+            margin: 0;
+
+            font-size: 21px;
+
+        }
+
+        #container {
+
+            display: flex;
+
+            width: 100%;
+
+            height: calc(100vh - 60px);
+
+        }
+
+        #sidebar {
+
+            width: 300px;
+
+            background: #f5f5f5;
+
+            padding: 15px;
+
+            overflow-y: auto;
+
+            border-right: 1px solid #ccc;
+
+        }
+
+        #sidebar h3 {
+
+            color: #1b5e20;
+
+        }
+
+        #map {
+
+            flex: 1;
+
+            height: 100%;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 9px;
+
+            margin-bottom: 8px;
+
+            border: 1px solid #aaa;
+
+            border-radius: 4px;
+
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 9px;
+
+            margin-bottom: 8px;
+
+            background: #2e7d32;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+        }
+
+        button:hover {
+
+            background: #1b5e20;
+
+        }
+
+        #info {
+
+            background: white;
+
+            padding: 10px;
+
+            border-radius: 5px;
+
+            font-size: 13px;
+
+        }
+
+        .info-row {
+
+            padding: 5px 0;
+
+            border-bottom: 1px solid #eee;
+
+        }
+
+        .info-key {
+
+            font-weight: bold;
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<header>
 
-    <div class="logo">
-        🌱
-    </div>
+<div id="header">
 
-    <div>
-        <h1>WEBGIS QUẢN LÝ VƯỜN CAO SU</h1>
-        <div class="subtitle">
-            Hệ thống thông tin địa lý quản lý và phân tích vườn cây
-        </div>
-    </div>
+    <h1>
+        🌱 WEBGIS QUẢN LÝ VƯỜN CAO SU
+    </h1>
 
-</header>
+</div>
 
 
-<div class="main-container">
+<div id="container">
 
 
-    <!-- ================= SIDEBAR ================= -->
+    <!-- SIDEBAR -->
 
-    <aside id="sidebar">
+    <div id="sidebar">
 
-        <h2>LỚP DỮ LIỆU</h2>
+        <h3>LỚP DỮ LIỆU</h3>
 
-        <label class="layer-item">
+        <label>
 
             <input
                 type="checkbox"
@@ -59,7 +193,7 @@
                 checked
             >
 
-            Lô cao su
+            Hiển thị lô cao su
 
         </label>
 
@@ -67,30 +201,19 @@
         <hr>
 
 
-        <h2>TRA CỨU</h2>
-
-
-        <label>
-            Mã lô
-        </label>
+        <h3>TRA CỨU LÔ</h3>
 
         <input
             type="text"
-            id="searchMaLo"
-            placeholder="Ví dụ: L001"
+            id="search"
+            placeholder="Nhập mã lô..."
         >
 
-
-        <button
-            onclick="searchLo()"
-        >
+        <button onclick="searchLo()">
             🔍 Tìm kiếm
         </button>
 
-
-        <button
-            onclick="resetMap()"
-        >
+        <button onclick="resetMap()">
             ↺ Hiển thị tất cả
         </button>
 
@@ -98,40 +221,412 @@
         <hr>
 
 
-        <h2>THÔNG TIN LÔ</h2>
+        <h3>THÔNG TIN LÔ</h3>
 
-        <div id="infoContent">
+        <div id="info">
 
-            <p>
-                Click vào một lô trên bản đồ
-                để xem thông tin.
-            </p>
+            Click vào một lô trên bản đồ.
 
         </div>
 
+    </div>
 
-    </aside>
 
+    <!-- MAP -->
 
-    <!-- ================= MAP ================= -->
-
-    <main id="map"></main>
+    <div id="map"></div>
 
 
 </div>
 
 
-<!-- Leaflet -->
+<!-- Leaflet JS -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 
-<!-- JavaScript -->
+<script>
 
-<script
-    src="js/app.js">
+
+// ========================================
+// KHỞI TẠO BẢN ĐỒ
+// ========================================
+
+const map = L.map("map").setView(
+    [13.75, 108.0],
+    10
+);
+
+
+// ========================================
+// BẢN ĐỒ NỀN
+// ========================================
+
+L.tileLayer(
+
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+    {
+
+        maxZoom: 20,
+
+        attribution:
+            "&copy; OpenStreetMap"
+
+    }
+
+).addTo(map);
+
+
+// ========================================
+// BIẾN DỮ LIỆU
+// ========================================
+
+let loLayer;
+
+let allFeatures = [];
+
+
+// ========================================
+// STYLE LÔ
+// ========================================
+
+function styleLo(feature) {
+
+    return {
+
+        color: "#006400",
+
+        weight: 1,
+
+        fillColor: "#66bb6a",
+
+        fillOpacity: 0.55
+
+    };
+
+}
+
+
+// ========================================
+// HIỂN THỊ THÔNG TIN
+// ========================================
+
+function showInfo(properties) {
+
+    let html = "";
+
+    for (const key in properties) {
+
+        let value = properties[key];
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            value = "";
+
+        }
+
+        html += `
+
+            <div class="info-row">
+
+                <span class="info-key">
+                    ${key}
+                </span>
+
+                :
+                ${value}
+
+            </div>
+
+        `;
+
+    }
+
+    document.getElementById(
+        "info"
+    ).innerHTML = html;
+
+}
+
+
+// ========================================
+// XỬ LÝ TỪNG LÔ
+// ========================================
+
+function onEachFeature(
+    feature,
+    layer
+) {
+
+    layer.on({
+
+        mouseover: function(e) {
+
+            e.target.setStyle({
+
+                weight: 3,
+
+                color: "red",
+
+                fillOpacity: 0.8
+
+            });
+
+        },
+
+        mouseout: function(e) {
+
+            loLayer.resetStyle(
+                e.target
+            );
+
+        },
+
+        click: function() {
+
+            showInfo(
+                feature.properties
+            );
+
+        }
+
+    });
+
+}
+
+
+// ========================================
+// ĐỌC GEOJSON
+// ========================================
+
+fetch("lo.geojson")
+
+    .then(function(response) {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Không tìm thấy lo.geojson"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        console.log(
+            "Đã tải GeoJSON:",
+            data
+        );
+
+        allFeatures =
+            data.features;
+
+
+        loLayer = L.geoJSON(
+
+            data,
+
+            {
+
+                style: styleLo,
+
+                onEachFeature:
+                    onEachFeature
+
+            }
+
+        ).addTo(map);
+
+
+        // Zoom tới toàn bộ lô
+
+        if (
+            loLayer.getBounds().isValid()
+        ) {
+
+            map.fitBounds(
+                loLayer.getBounds()
+            );
+
+        }
+
+    })
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "info"
+        ).innerHTML = `
+
+            <b style="color:red">
+                Không tải được lo.geojson
+            </b>
+
+            <br><br>
+
+            Kiểm tra lại tên file
+            và vị trí file trong repository.
+
+        `;
+
+    });
+
+
+// ========================================
+// BẬT / TẮT LỚP
+// ========================================
+
+document
+    .getElementById("toggleLo")
+    .addEventListener(
+        "change",
+        function() {
+
+            if (!loLayer) return;
+
+            if (this.checked) {
+
+                loLayer.addTo(map);
+
+            } else {
+
+                map.removeLayer(
+                    loLayer
+                );
+
+            }
+
+        }
+    );
+
+
+// ========================================
+// TÌM KIẾM
+// ========================================
+
+function searchLo() {
+
+    const keyword =
+
+        document
+            .getElementById("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    if (!keyword) {
+
+        alert(
+            "Vui lòng nhập mã lô."
+        );
+
+        return;
+
+    }
+
+
+    let found = null;
+
+
+    for (
+        const feature
+        of allFeatures
+    ) {
+
+        for (
+            const key
+            in feature.properties
+        ) {
+
+            const value =
+
+                String(
+                    feature.properties[key]
+                    ?? ""
+                )
+                .toLowerCase();
+
+
+            if (
+                value === keyword
+            ) {
+
+                found = feature;
+
+                break;
+
+            }
+
+        }
+
+
+        if (found) break;
+
+    }
+
+
+    if (!found) {
+
+        alert(
+            "Không tìm thấy lô."
+        );
+
+        return;
+
+    }
+
+
+    const tempLayer =
+        L.geoJSON(found);
+
+
+    map.fitBounds(
+        tempLayer.getBounds(),
+        {
+            maxZoom: 17
+        }
+    );
+
+
+    showInfo(
+        found.properties
+    );
+
+}
+
+
+// ========================================
+// RESET
+// ========================================
+
+function resetMap() {
+
+    if (!loLayer) return;
+
+    map.fitBounds(
+        loLayer.getBounds()
+    );
+
+    document.getElementById(
+        "info"
+    ).innerHTML =
+        "Click vào một lô trên bản đồ.";
+
+}
+
 </script>
 
 
